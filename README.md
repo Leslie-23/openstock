@@ -10,7 +10,7 @@ A modern, self-hosted inventory and stock management system built with Nuxt 4 an
 
 Give it a try: [openstock-v2.pages.dev](https://openstock-v2.pages.dev/)
 
-- **User:** Demo
+- **User:** demo@demo.com
 - **Password:** 12345678
 
 ## ✨ Features
