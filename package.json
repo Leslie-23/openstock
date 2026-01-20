@@ -8,6 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "db:setup": "npx tsx scripts/setup-db.ts",
     "db:generate": "drizzle-kit generate",
     "db:populate": "npx tsx scripts/populate-db.ts",
     "db:populate:full": "npx tsx scripts/populate-db.ts --full",
@@ -35,6 +36,9 @@
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.77",
+    "@types/better-sqlite3": "^7.6.12",
+    "better-sqlite3": "^11.8.1",
+    "tsx": "^4.19.2",
     "wrangler": "^4.51.0"
   }
 }

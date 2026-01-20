@@ -147,13 +147,33 @@ npm run deploy:cf
 
 ## 💻 Development
 
-Start the development server on `http://localhost:3000`:
+### First-Time Setup
+
+Before running the development server for the first time, you need to set up the local database:
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Initialize the database (creates all tables)
+npm run db:setup
+
+# 3. Start the development server
 npm run dev
 ```
 
-The development server uses NuxtHub's local proxy for Cloudflare resources.
+The application will be available at `http://localhost:3000`.
+
+### Accessing the Application
+
+1. Open http://localhost:3000 in your browser
+2. You'll be redirected to the setup page
+3. Create your first admin user account
+4. Start using the application!
+
+### Development Server
+
+The development server uses NuxtHub's local database stored in `.data/hub/cache/db.sqlite`. This is a local SQLite database that persists between restarts.
 
 ## 📦 Available Scripts
 
@@ -163,6 +183,7 @@ The development server uses NuxtHub's local proxy for Cloudflare resources.
 | `npm run build`       | Build for production                    |
 | `npm run preview`     | Preview production build locally        |
 | `npm run deploy:cf`   | Build and deploy to Cloudflare Pages    |
+| `npm run db:setup`    | Initialize local database (first-time)  |
 | `npm run db:generate` | Generate migrations from schema changes |
 
 ## 🗄 Database
