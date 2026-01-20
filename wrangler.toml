@@ -1,0 +1,38 @@
+# =============================================================================
+# OpenStock – Cloudflare Wrangler Configuration
+# =============================================================================
+
+name = "openstock"
+compatibility_date = "2025-07-15"
+compatibility_flags = ["nodejs_compat"]
+
+# =============================================================================
+# Cloudflare Pages (Nuxt build output)
+# =============================================================================
+pages_build_output_dir = ".output/public"
+
+# =============================================================================
+# D1 Database
+# =============================================================================
+# Created via: npx wrangler d1 create openstock-db
+[[d1_databases]]
+binding = "openstock_db"
+database_name = "openstock-db"
+database_id = "6a569d92-e400-43b6-a62f-27ddb4f06925"
+
+# =============================================================================
+# KV Namespace (Sessions / Cache)
+# =============================================================================
+# Created via: npx wrangler kv namespace create openstock_kv
+[[kv_namespaces]]
+binding = "openstock_kv"
+id = "12772ab11e4e488eb822cdbbe395ffcb"
+
+# =============================================================================
+# (Optional) R2 Bucket – Product Images / Files
+# =============================================================================
+# Uncomment only if you actually create the bucket
+#
+# [[r2_buckets]]
+# binding = "openstock_files"
+# bucket_name = "openstock-files"
