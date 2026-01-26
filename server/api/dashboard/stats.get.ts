@@ -33,6 +33,20 @@ export default defineEventHandler(async () => {
   const totalStockValue =
     Math.round((stockValueResult[0]?.total ?? 0) * 100) / 100;
 
+  // Calculate items moved out and their total value
+  const movedOutResult = await db
+    .select({
+      totalQuantity: sql<number>`COALESCE(SUM(ABS(${tables.stockMovements.quantity})), 0)`,
+      totalValue: sql<number>`COALESCE(SUM(ABS(${tables.stockMovements.quantity}) * COALESCE(${tables.stockMovements.unitCost}, 0)), 0)`,
+      movementCount: sql<number>`count(*)`,
+    })
+    .from(tables.stockMovements)
+    .where(eq(tables.stockMovements.type, 'out'));
+
+  const movedOutQuantity = movedOutResult[0]?.totalQuantity ?? 0;
+  const movedOutValue = Math.round((movedOutResult[0]?.totalValue ?? 0) * 100) / 100;
+  const movedOutCount = movedOutResult[0]?.movementCount ?? 0;
+
   const recentMovements = await db.query.stockMovements.findMany({
     limit: 5,
     orderBy: [desc(tables.stockMovements.createdAt)],
@@ -48,5 +62,8 @@ export default defineEventHandler(async () => {
     totalStockValue,
     lowStockProducts,
     recentMovements,
+    movedOutQuantity,
+    movedOutValue,
+    movedOutCount,
   };
 });
