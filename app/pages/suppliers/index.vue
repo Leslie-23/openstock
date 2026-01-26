@@ -119,10 +119,10 @@ const activeSuppliers = computed(
         <h1 class="text-lg font-semibold text-gray-900">Suppliers</h1>
         <p class="text-xs text-gray-500">Manage product suppliers</p>
       </div>
-      <button class="btn-primary" @click="openCreateModal">
+      <UiButton class="btn-primary" @click="openCreateModal">
         <Icon name="lucide:plus" class="h-3.5 w-3.5" />
         Add
-      </button>
+      </UiButton>
     </div>
 
     <div class="flex gap-3">

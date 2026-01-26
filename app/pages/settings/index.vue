@@ -126,7 +126,7 @@ const ui = {
       </button>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-12">
+       <div class="grid gap-6 lg:grid-cols-12">
       <div v-if="settings" class="lg:col-span-8 space-y-6">
         <div :class="ui.card">
           <div :class="ui.cardHeader">
@@ -148,6 +148,7 @@ const ui = {
               <div>
                 <label :class="ui.label">Currency</label>
                 <select v-model="settings.currency" :class="ui.inputSelect">
+                  <option value="GHC">Ghana Cedis (₵)</option>
                   <option value="EUR">Euro (€)</option>
                   <option value="USD">US Dollar ($)</option>
                   <option value="GBP">British Pound (£)</option>
@@ -331,7 +332,7 @@ const ui = {
           <div class="bg-gray-50 px-4 py-3 border-t border-gray-100">
             <p class="text-xs text-gray-500 text-center">
               Alerts are sent to
-              <span class="font-medium text-gray-900">admin@openstock.io</span>
+              <span class="font-medium text-gray-900">admin@inventra.io</span>
             </p>
           </div>
         </div>

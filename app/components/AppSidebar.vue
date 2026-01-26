@@ -4,37 +4,37 @@ const router = useRouter();
 const { user, isAdmin, logout } = useAuth();
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: 'lucide:layout-dashboard' },
-  { name: 'Products', href: '/products', icon: 'lucide:package' },
-  { name: 'Categories', href: '/categories', icon: 'lucide:folder-tree' },
-  { name: 'Suppliers', href: '/suppliers', icon: 'lucide:truck' },
-  { name: 'Movements', href: '/movements', icon: 'lucide:arrow-left-right' },
+  { name: "Dashboard", href: "/", icon: "lucide:layout-dashboard" },
+  { name: "Products", href: "/products", icon: "lucide:package" },
+  { name: "Categories", href: "/categories", icon: "lucide:folder-tree" },
+  { name: "Suppliers", href: "/suppliers", icon: "lucide:truck" },
+  { name: "Movements", href: "/movements", icon: "lucide:arrow-left-right" },
 ];
 
 const secondaryNavigation = computed(() => {
   const items = [
-    { name: 'Taxes', href: '/taxes', icon: 'lucide:percent' },
-    { name: 'Settings', href: '/settings', icon: 'lucide:settings' },
+    { name: "Taxes", href: "/taxes", icon: "lucide:percent" },
+    { name: "Settings", href: "/settings", icon: "lucide:settings" },
   ];
 
   // Add Users link for admins only
   if (isAdmin.value) {
-    items.unshift({ name: 'Users', href: '/users', icon: 'lucide:users' });
+    items.unshift({ name: "Users", href: "/users", icon: "lucide:users" });
   }
 
   return items;
 });
 
 function isActive(href: string): boolean {
-  if (href === '/') {
-    return route.path === '/';
+  if (href === "/") {
+    return route.path === "/";
   }
   return route.path.startsWith(href);
 }
 
 async function handleLogout() {
   await logout();
-  await router.push('/auth/login');
+  await router.push("/auth/login");
 }
 </script>
 
@@ -49,12 +49,26 @@ async function handleLogout() {
       </div>
       <div class="flex flex-col">
         <span class="text-sm font-bold tracking-tight text-gray-900"
-          >OpenStock</span
+          >Inventra</span
         >
         <span
           class="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
-          >Inventory</span
         >
+          Powered by OpenStock
+        </span>
+        <span class="text-[9px] font-medium text-gray-400 tracking-wide">
+          Built by 
+          <span>
+            <a
+              href="https://lesliepaul.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-gray-600 underline transition-colors no-underline" 
+            >
+            Leslie Paul
+            </a>
+          </span>
+        </span>
       </div>
     </div>
 
@@ -137,7 +151,7 @@ async function handleLogout() {
           </div>
           <div class="flex-1 min-w-0">
             <p class="truncate text-sm font-semibold text-gray-900">
-              {{ user?.name || 'User' }}
+              {{ user?.name || "User" }}
             </p>
             <p class="truncate text-xs text-gray-500">{{ user?.email }}</p>
           </div>

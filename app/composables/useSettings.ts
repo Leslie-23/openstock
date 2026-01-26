@@ -13,7 +13,7 @@ interface ApiSettings {
 // Frontend shape (nested for UI)
 export interface Settings {
   businessName: string;
-  currency: 'EUR' | 'USD' | 'GBP';
+  currency: 'EUR' | 'USD' | 'GBP' | 'GHC';
   defaultMargin: number;
   stockAlerts: {
     lowStock: boolean;
@@ -68,8 +68,10 @@ export const useSettings = () => {
         return '$';
       case 'GBP':
         return '£';
+      case 'GHC':
+        return '₵';
       default:
-        return '€';
+        return '₵';
     }
   });
 

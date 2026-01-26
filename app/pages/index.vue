@@ -9,7 +9,7 @@ const { settings } = useSettings();
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
-    currency: settings.value?.currency || 'EUR',
+    currency: settings.value?.currency || 'GHC',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);

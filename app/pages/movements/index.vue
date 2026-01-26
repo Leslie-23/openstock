@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StockMovement } from '~~/server/database/schema';
 
+
 const toast = useToast();
 
 // Fetch movements
@@ -182,10 +183,10 @@ function formatDate(date: Date | string) {
         <h1 class="text-lg font-semibold text-gray-900">Stock Movements</h1>
         <p class="text-xs text-gray-500">Track inventory changes</p>
       </div>
-      <button class="btn-primary" @click="openCreateModal">
+      <UiButton class="btn-primary" @click="openCreateModal">
         <Icon name="lucide:plus" class="h-3.5 w-3.5" />
         New
-      </button>
+      </UiButton>
     </div>
 
     <!-- Quick action buttons -->

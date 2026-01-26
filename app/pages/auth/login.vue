@@ -61,8 +61,8 @@ async function handleSubmit() {
           </div>
           <h1 class="text-2xl font-bold text-gray-900">Welcome back</h1>
           <p class="text-sm text-gray-500 mt-2">
-            Sign in to your OpenStock account
-          </p>
+            Sign in to your Inventra (OpenStock) account
+          </p>    
         </div>
 
         <form @submit.prevent="handleSubmit" class="space-y-5">

@@ -142,10 +142,10 @@ const topLevelCategories = computed(
         <h1 class="text-lg font-semibold text-gray-900">Categories</h1>
         <p class="text-xs text-gray-500">Organize products by category</p>
       </div>
-      <button class="btn-primary" @click="openCreateModal">
+      <UiButton class="btn-primary" @click="openCreateModal">
         <Icon name="lucide:plus" class="h-3.5 w-3.5" />
         Add
-      </button>
+      </UiButton>
     </div>
 
     <!-- Quick Stats -->
@@ -315,7 +315,7 @@ const topLevelCategories = computed(
         >
           Cancel
         </button>
-        <button 
+        <UiButton 
           type="submit" 
           form="category-form"
           class="btn-primary" 
@@ -327,7 +327,7 @@ const topLevelCategories = computed(
             class="h-3.5 w-3.5 animate-spin"
           />
           {{ editingCategory ? 'Update' : 'Create' }}
-        </button>
+        </UiButton>
       </template>
     </UiModal>
   </div>
