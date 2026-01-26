@@ -54,7 +54,7 @@ const ui = {
       </div>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <div
         class="p-5 rounded-lg border border-gray-200 bg-white shadow-sm hover:border-gray-300 transition-colors"
       >
@@ -146,6 +146,41 @@ const ui = {
         <div class="mt-2">
           <span class="text-2xl font-bold text-gray-900 font-mono">{{
             formatCurrency(stats?.totalStockValue ?? 0)
+          }}</span>
+        </div>
+      </div>
+
+      <div
+        class="p-5 rounded-lg border border-red-100 bg-red-50/30 shadow-sm hover:border-red-200 transition-colors"
+      >
+        <div class="flex justify-between items-start">
+          <p class="text-xs font-medium text-red-700 uppercase tracking-wide">
+            Items Moved Out
+          </p>
+          <Icon name="lucide:package-minus" class="h-4 w-4 text-red-500" />
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold text-red-700 font-mono">{{
+            stats?.movedOutQuantity ?? 0
+          }}</span>
+          <span class="text-xs text-red-600">
+            ({{ stats?.movedOutCount ?? 0 }} transactions)
+          </span>
+        </div>
+      </div>
+
+      <div
+        class="p-5 rounded-lg border border-red-100 bg-red-50/30 shadow-sm hover:border-red-200 transition-colors"
+      >
+        <div class="flex justify-between items-start">
+          <p class="text-xs font-medium text-red-700 uppercase tracking-wide">
+            Moved Out Value
+          </p>
+          <Icon name="lucide:trending-down" class="h-4 w-4 text-red-500" />
+        </div>
+        <div class="mt-2">
+          <span class="text-2xl font-bold text-red-700 font-mono">{{
+            formatCurrency(stats?.movedOutValue ?? 0)
           }}</span>
         </div>
       </div>
