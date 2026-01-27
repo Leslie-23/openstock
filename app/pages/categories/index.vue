@@ -182,7 +182,7 @@ const topLevelCategories = computed(
         hoverable
       >
         <template #name="{ item }">
-          <div class="flex items-center gap-2.5">
+          <NuxtLink :to="`/categories/${item.id}`" class="flex items-center gap-2.5 group">
             <div
               class="flex h-7 w-7 items-center justify-center rounded"
               :style="{ backgroundColor: (item.color || '#6B7280') + '15' }"
@@ -193,7 +193,7 @@ const topLevelCategories = computed(
               />
             </div>
             <div>
-              <p class="text-xs font-medium text-gray-900">{{ item.name }}</p>
+              <p class="text-xs font-medium text-gray-900 group-hover:text-primary-600">{{ item.name }}</p>
               <p
                 v-if="item.description"
                 class="max-w-[200px] truncate text-xs text-gray-500"
@@ -201,7 +201,7 @@ const topLevelCategories = computed(
                 {{ item.description }}
               </p>
             </div>
-          </div>
+          </NuxtLink>
         </template>
 
         <template #parent="{ item }">

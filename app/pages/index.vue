@@ -283,13 +283,14 @@ const ui = {
           </div>
 
           <template v-else-if="stats?.lowStockProducts?.length">
-            <div
+            <NuxtLink
               v-for="product in stats.lowStockProducts"
               :key="product.id"
+              :to="`/products/${product.id}`"
               class="flex items-center justify-between px-4 py-3 hover:bg-gray-50/50 transition-colors group"
             >
               <div class="min-w-0">
-                <p class="text-sm font-medium text-gray-900 truncate">
+                <p class="text-sm font-medium text-gray-900 truncate group-hover:text-primary-600">
                   {{ product.name }}
                 </p>
                 <p class="text-[11px] text-gray-500 font-mono">
@@ -305,13 +306,13 @@ const ui = {
                     >Min: {{ product.stockMin }}</span
                   >
                 </div>
-                <button
-                  class="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-gray-900 rounded-md"
+                <div
+                  class="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 rounded-md"
                 >
                   <Icon name="lucide:arrow-right" class="h-3 w-3" />
-                </button>
+                </div>
               </div>
-            </div>
+            </NuxtLink>
           </template>
 
           <div v-else class="p-8 text-center">
@@ -347,9 +348,10 @@ const ui = {
           </div>
 
           <template v-else-if="stats?.recentMovements?.length">
-            <div
+            <NuxtLink
               v-for="movement in stats.recentMovements"
               :key="movement.id"
+              :to="`/products/${movement.productId}`"
               class="flex items-center justify-between px-4 py-3 hover:bg-gray-50/50 transition-colors"
             >
               <div class="flex items-center gap-3 min-w-0">
@@ -392,7 +394,7 @@ const ui = {
                   }}{{ Math.abs(movement.quantity) }}
                 </span>
               </div>
-            </div>
+            </NuxtLink>
           </template>
 
           <div v-else class="p-8 text-center text-gray-500">

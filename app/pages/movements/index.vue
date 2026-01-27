@@ -300,14 +300,14 @@ function formatDate(date: Date | string) {
         </template>
 
         <template #product="{ item }">
-          <div class="flex items-center gap-2">
+          <NuxtLink :to="`/products/${item.productId}`" class="flex items-center gap-2 group">
             <div
               class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-gray-100"
             >
               <Icon name="lucide:package" class="h-3 w-3 text-gray-500" />
             </div>
             <div class="min-w-0">
-              <p class="truncate text-xs font-medium text-gray-900">
+              <p class="truncate text-xs font-medium text-gray-900 group-hover:text-primary-600">
                 {{ item.product?.name || 'Unknown' }}
               </p>
               <p
@@ -317,7 +317,7 @@ function formatDate(date: Date | string) {
                 {{ item.product.sku }}
               </p>
             </div>
-          </div>
+          </NuxtLink>
         </template>
 
         <template #type="{ item }">

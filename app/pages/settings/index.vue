@@ -255,7 +255,7 @@ const ui = {
         <div v-if="settings" :class="ui.card">
           <div :class="ui.cardHeader">
             <h2 :class="ui.cardTitle">Notifications</h2>
-            <Icon name="lucide:bell" class="h-4 w-4 text-gray-400" />
+            <NuxtLink to="/notifications" class="text-xs font-medium text-gray-500 hover:text-gray-900 hover:underline">View All</NuxtLink>
           </div>
 
           <div class="divide-y divide-gray-100">

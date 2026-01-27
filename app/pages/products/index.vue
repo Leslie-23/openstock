@@ -7,6 +7,7 @@ import type {
   ProductVariant as DBProductVariant,
 } from '~~/server/database/schema';
 
+const route = useRoute();
 const toast = useToast();
 const router = useRouter();
 const { currencySymbol, currencyIcon } = useSettings();
@@ -498,6 +499,15 @@ function getSupplierName(supplierId: string | null | undefined) {
   const supplier = suppliers.value.find((s) => s.id === supplierId);
   return supplier?.name || null;
 }
+
+// Auto-open create modal when navigated with ?action=create
+onMounted(() => {
+  if (route.query.action === 'create') {
+    openCreateModal();
+    // Clean URL
+    router.replace({ path: '/products', query: {} });
+  }
+});
 </script>
 
 <template>
