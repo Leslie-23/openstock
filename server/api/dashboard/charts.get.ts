@@ -3,8 +3,8 @@ import { sql, eq, desc, gte } from 'drizzle-orm';
 export default defineEventHandler(async () => {
   const db = useDB();
 
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const fourteenDaysAgo = new Date();
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
   const movementsByDay = await db
     .select({
@@ -13,7 +13,7 @@ export default defineEventHandler(async () => {
       totalQuantity: sql<number>`SUM(ABS(${tables.stockMovements.quantity}))`,
     })
     .from(tables.stockMovements)
-    .where(gte(tables.stockMovements.createdAt, thirtyDaysAgo))
+    .where(gte(tables.stockMovements.createdAt, fourteenDaysAgo))
     .groupBy(
       sql`date(${tables.stockMovements.createdAt} / 1000, 'unixepoch')`,
       tables.stockMovements.type
@@ -83,7 +83,7 @@ export default defineEventHandler(async () => {
       totalQuantity: sql<number>`SUM(ABS(${tables.stockMovements.quantity}))`,
     })
     .from(tables.stockMovements)
-    .where(gte(tables.stockMovements.createdAt, thirtyDaysAgo))
+    .where(gte(tables.stockMovements.createdAt, fourteenDaysAgo))
     .groupBy(tables.stockMovements.type);
 
   return {

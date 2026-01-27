@@ -84,7 +84,7 @@ const chartOptions: ChartOptions<'line'> = {
         font: {
           size: 11,
         },
-        stepSize: 1,
+        precision: 0,
       },
     },
   },

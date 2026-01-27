@@ -50,7 +50,7 @@ const ui = {
         class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-md shadow-sm"
       >
         <Icon name="lucide:calendar" class="h-4 w-4 text-gray-400" />
-        <span class="text-xs font-medium text-gray-700">Last 30 Days</span>
+        <span class="text-xs font-medium text-gray-700">Last 14 Days</span>
       </div>
     </div>
 
@@ -220,7 +220,6 @@ const ui = {
             :labels="chartData.movementsChart.labels"
             :stock-in="chartData.movementsChart.stockIn"
             :stock-out="chartData.movementsChart.stockOut"
-            height="280"
           />
           <div
             v-else
