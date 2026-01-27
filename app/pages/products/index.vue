@@ -23,6 +23,51 @@ const {
   (Product & { variants?: DBProductVariant[]; category?: Category })[]
 >('/api/products');
 
+// Filtering
+const searchQuery = ref('');
+const stockFilter = ref<'all' | 'in_stock' | 'low_stock' | 'out_of_stock'>('all');
+const categoryFilter = ref('');
+
+const filteredProducts = computed(() => {
+  if (!products.value) return [];
+  return products.value.filter((item) => {
+    // Search filter
+    if (searchQuery.value) {
+      const q = searchQuery.value.toLowerCase();
+      const matchesName = item.name?.toLowerCase().includes(q);
+      const matchesSku = item.sku?.toLowerCase().includes(q);
+      const matchesBarcode = item.barcode?.toLowerCase().includes(q);
+      if (!matchesName && !matchesSku && !matchesBarcode) return false;
+    }
+    // Stock status filter
+    if (stockFilter.value !== 'all') {
+      const status = getStockStatus(item).label;
+      if (stockFilter.value === 'in_stock' && status !== 'In stock') return false;
+      if (stockFilter.value === 'low_stock' && status !== 'Low stock') return false;
+      if (stockFilter.value === 'out_of_stock' && status !== 'Out of stock') return false;
+    }
+    // Category filter
+    if (categoryFilter.value) {
+      if (item.categoryId !== categoryFilter.value) return false;
+    }
+    return true;
+  });
+});
+
+const activeFilterCount = computed(() => {
+  let count = 0;
+  if (searchQuery.value) count++;
+  if (stockFilter.value !== 'all') count++;
+  if (categoryFilter.value) count++;
+  return count;
+});
+
+function clearFilters() {
+  searchQuery.value = '';
+  stockFilter.value = 'all';
+  categoryFilter.value = '';
+}
+
 const isModalOpen = ref(false);
 const editingProduct = ref<Product | null>(null);
 const isSubmitting = ref(false);
@@ -472,6 +517,49 @@ function getSupplierName(supplierId: string | null | undefined) {
       </UiButton>
     </div>
 
+    <!-- Filters -->
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="relative flex-1 min-w-[200px] max-w-sm">
+        <Icon name="lucide:search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search by name, SKU, or barcode..."
+          class="block w-full rounded-md border-gray-300 pl-9 pr-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:ring-gray-900"
+        />
+      </div>
+
+      <select
+        v-model="stockFilter"
+        class="rounded-md border-gray-300 text-sm shadow-sm focus:border-gray-900 focus:ring-gray-900 h-[38px]"
+      >
+        <option value="all">All stock levels</option>
+        <option value="in_stock">In stock</option>
+        <option value="low_stock">Low stock</option>
+        <option value="out_of_stock">Out of stock</option>
+      </select>
+
+      <select
+        v-model="categoryFilter"
+        class="rounded-md border-gray-300 text-sm shadow-sm focus:border-gray-900 focus:ring-gray-900 h-[38px]"
+      >
+        <option value="">All categories</option>
+        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+
+      <button
+        v-if="activeFilterCount > 0"
+        class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+        @click="clearFilters"
+      >
+        <Icon name="lucide:x" class="h-3.5 w-3.5" />
+        Clear filters
+        <span class="inline-flex items-center justify-center rounded-full bg-gray-200 text-gray-700 text-xs h-5 w-5 font-medium">{{ activeFilterCount }}</span>
+      </button>
+    </div>
+
     <!-- Custom Accordion Table -->
     <div
       class="w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm ring-1 ring-gray-900/5"
@@ -536,29 +624,36 @@ function getSupplierName(supplierId: string | null | undefined) {
             </tr>
 
             <!-- Empty State -->
-            <tr v-else-if="!products?.length">
+            <tr v-else-if="!filteredProducts.length">
               <td colspan="8" class="p-0">
                 <div
                   class="flex flex-col items-center justify-center py-12 text-center bg-gray-50/30"
                 >
                   <div class="rounded-full bg-gray-100 p-3 mb-3">
                     <Icon
-                      name="lucide:package-open"
+                      :name="activeFilterCount > 0 ? 'lucide:search-x' : 'lucide:package-open'"
                       class="h-5 w-5 text-gray-400"
                     />
                   </div>
                   <h3 class="text-sm font-medium text-gray-900">
-                    Inventory empty
+                    {{ activeFilterCount > 0 ? 'No matching products' : 'Inventory empty' }}
                   </h3>
                   <p class="mt-1 text-xs text-gray-500">
-                    Get started by adding your first product.
+                    {{ activeFilterCount > 0 ? 'Try adjusting your filters.' : 'Get started by adding your first product.' }}
                   </p>
+                  <button
+                    v-if="activeFilterCount > 0"
+                    class="mt-2 text-xs text-primary-600 hover:text-primary-700 font-medium"
+                    @click="clearFilters"
+                  >
+                    Clear all filters
+                  </button>
                 </div>
               </td>
             </tr>
 
             <!-- Product Rows -->
-            <template v-else v-for="(item, index) in products" :key="item.id">
+            <template v-else v-for="(item, index) in filteredProducts" :key="item.id">
               <!-- Main Product Row -->
               <tr
                 class="group transition-colors duration-150 ease-in-out hover:bg-gray-50"
