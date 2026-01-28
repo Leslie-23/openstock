@@ -11,14 +11,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Only admins can update users
-  if (session.user.role !== 'admin') {
-    throw createError({
-      statusCode: 403,
-      message: 'Only administrators can update users',
-    });
-  }
-
   const db = useDB();
   const id = getRouterParam(event, 'id');
   const body = await readBody(event);
@@ -28,6 +20,25 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       message: 'User ID is required',
     });
+  }
+
+  // Admins can update any user; non-admins can only update their own profile
+  const isSelf = id === session.user.id;
+  if (session.user.role !== 'admin' && !isSelf) {
+    throw createError({
+      statusCode: 403,
+      message: 'Only administrators can update other users',
+    });
+  }
+
+  // Non-admins cannot change roles or deactivate accounts
+  if (!isSelf && session.user.role !== 'admin') {
+    if (body.role || typeof body.isActive === 'boolean') {
+      throw createError({
+        statusCode: 403,
+        message: 'Only administrators can change roles or account status',
+      });
+    }
   }
 
   // Check if user exists
@@ -92,6 +103,24 @@ export default defineEventHandler(async (event) => {
         message: 'Password must be at least 8 characters',
       });
     }
+
+    // If user is changing their own password, verify current password
+    if (id === session.user.id) {
+      if (!body.currentPassword) {
+        throw createError({
+          statusCode: 400,
+          message: 'Current password is required to change your password',
+        });
+      }
+      const isValid = await verifyPassword(existingUser.passwordHash, body.currentPassword);
+      if (!isValid) {
+        throw createError({
+          statusCode: 403,
+          message: 'Current password is incorrect',
+        });
+      }
+    }
+
     updateData.passwordHash = await hashPassword(body.password);
   }
 

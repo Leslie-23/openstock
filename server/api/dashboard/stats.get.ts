@@ -15,14 +15,24 @@ export default defineEventHandler(async () => {
     .where(eq(tables.suppliers.isActive, true));
   const totalSuppliers = totalSuppliersResult[0]?.count ?? 0;
 
+  // Get actual count of all low stock products
+  const lowStockCountResult = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(tables.products)
+    .where(
+      sql`${tables.products.stockQuantity} <= ${tables.products.stockMin} AND ${tables.products.isActive} = 1`
+    );
+  const lowStockCount = lowStockCountResult[0]?.count ?? 0;
+
+  // Get top 5 low stock products for display
   const lowStockProducts = await db
     .select()
     .from(tables.products)
     .where(
       sql`${tables.products.stockQuantity} <= ${tables.products.stockMin} AND ${tables.products.isActive} = 1`
     )
+    .orderBy(sql`${tables.products.stockQuantity} - ${tables.products.stockMin} ASC`)
     .limit(5);
-  const lowStockCount = lowStockProducts.length;
 
   const stockValueResult = await db
     .select({

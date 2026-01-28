@@ -72,6 +72,7 @@ async function updatePassword() {
       method: 'PUT',
       body: {
         password: passwordForm.newPassword,
+        currentPassword: passwordForm.currentPassword,
       },
     });
     toast.success('Password updated', 'Your password has been changed.');
