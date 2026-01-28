@@ -159,7 +159,7 @@ const activeSuppliers = computed(
         hoverable
       >
         <template #name="{ item }">
-          <div class="flex items-center gap-2.5">
+          <NuxtLink :to="`/suppliers/${item.id}`" class="flex items-center gap-2.5 group">
             <div
               class="flex h-7 w-7 items-center justify-center rounded bg-gray-100"
             >
@@ -169,7 +169,7 @@ const activeSuppliers = computed(
               />
             </div>
             <div>
-              <p class="text-xs font-medium text-gray-900">{{ item.name }}</p>
+              <p class="text-xs font-medium text-gray-900 group-hover:text-primary-600">{{ item.name }}</p>
               <p
                 v-if="item.notes"
                 class="max-w-[180px] truncate text-xs text-gray-500"
@@ -177,7 +177,7 @@ const activeSuppliers = computed(
                 {{ item.notes }}
               </p>
             </div>
-          </div>
+          </NuxtLink>
         </template>
 
         <template #contact="{ item }">

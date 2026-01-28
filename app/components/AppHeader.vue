@@ -136,7 +136,7 @@ const filteredResults = computed(() => {
           id: supplier.id,
           name: supplier.name,
           description: supplier.email || undefined,
-          href: '/suppliers',
+          href: `/suppliers/${supplier.id}`,
           icon: 'lucide:truck',
         });
       }
@@ -155,7 +155,7 @@ const filteredResults = computed(() => {
           id: category.id,
           name: category.name,
           description: category.description || undefined,
-          href: '/categories',
+          href: `/categories/${category.id}`,
           icon: 'lucide:folder',
         });
       }
@@ -360,11 +360,11 @@ onMounted(() => {
               class="border-t border-gray-100 p-2"
             >
               <NuxtLink
-                to="/movements"
+                to="/notifications"
                 class="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 @click="closeNotifications"
               >
-                View all activity
+                View all notifications
                 <Icon name="lucide:arrow-right" class="h-4 w-4" />
               </NuxtLink>
             </div>
@@ -389,7 +389,7 @@ onMounted(() => {
             <span>Out</span>
           </UiButton>
         </NuxtLink>
-        <NuxtLink to="/products">
+        <NuxtLink to="/products?action=create">
           <UiButton
             variant="primary"
             size="sm"
@@ -555,6 +555,30 @@ onMounted(() => {
                     <Icon name="lucide:truck" class="h-4 w-4" />
                   </div>
                   <span>Suppliers</span>
+                </NuxtLink>
+                <NuxtLink
+                  to="/reports"
+                  class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                  @click="isSearchOpen = false"
+                >
+                  <div
+                    class="flex h-8 w-8 items-center justify-center rounded-md bg-gray-100 text-gray-500"
+                  >
+                    <Icon name="lucide:bar-chart-3" class="h-4 w-4" />
+                  </div>
+                  <span>Reports</span>
+                </NuxtLink>
+                <NuxtLink
+                  to="/categories"
+                  class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                  @click="isSearchOpen = false"
+                >
+                  <div
+                    class="flex h-8 w-8 items-center justify-center rounded-md bg-gray-100 text-gray-500"
+                  >
+                    <Icon name="lucide:folder-tree" class="h-4 w-4" />
+                  </div>
+                  <span>Categories</span>
                 </NuxtLink>
               </div>
             </div>

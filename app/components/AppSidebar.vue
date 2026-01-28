@@ -9,6 +9,8 @@ const navigation = [
   { name: "Categories", href: "/categories", icon: "lucide:folder-tree" },
   { name: "Suppliers", href: "/suppliers", icon: "lucide:truck" },
   { name: "Movements", href: "/movements", icon: "lucide:arrow-left-right" },
+  { name: "Reports", href: "/reports", icon: "lucide:bar-chart-3" },
+  { name: "Notifications", href: "/notifications", icon: "lucide:bell" },
 ];
 
 const secondaryNavigation = computed(() => {
@@ -144,17 +146,19 @@ async function handleLogout() {
       <!-- User Card -->
       <div class="mt-4 rounded-xl border border-gray-100 bg-gray-50/50 p-3">
         <div class="flex items-center gap-3">
-          <div
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100"
+          <NuxtLink
+            to="/profile"
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100 hover:border-primary-200 transition-colors"
+            title="View profile"
           >
             <Icon name="lucide:user" class="h-4 w-4 text-gray-600" />
-          </div>
-          <div class="flex-1 min-w-0">
+          </NuxtLink>
+          <NuxtLink to="/profile" class="flex-1 min-w-0 hover:opacity-80 transition-opacity">
             <p class="truncate text-sm font-semibold text-gray-900">
               {{ user?.name || "User" }}
             </p>
             <p class="truncate text-xs text-gray-500">{{ user?.email }}</p>
-          </div>
+          </NuxtLink>
           <button
             @click="handleLogout"
             class="text-gray-400 hover:text-gray-600 transition-colors"
