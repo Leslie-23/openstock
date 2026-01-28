@@ -4,7 +4,7 @@ const { data: chartData, pending: chartsPending } = await useFetch(
   '/api/dashboard/charts'
 );
 
-const { settings } = useSettings();
+const { settings, currencyIcon } = useSettings();
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('fr-FR', {
@@ -141,7 +141,7 @@ const ui = {
           <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">
             Total Valuation
           </p>
-          <Icon name="lucide:euro" class="h-4 w-4 text-gray-400" />
+          <Icon :name="currencyIcon" class="h-4 w-4 text-gray-400" />
         </div>
         <div class="mt-2">
           <span class="text-2xl font-bold text-gray-900 font-mono">{{

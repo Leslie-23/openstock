@@ -8,7 +8,7 @@ const isDev = import.meta.dev;
 
 const settings = ref<{
   businessName: string;
-  currency: 'EUR' | 'USD' | 'GBP';
+  currency: 'EUR' | 'USD' | 'GBP' | 'GHC';
   defaultMargin: number;
   stockAlerts: {
     lowStock: boolean;
