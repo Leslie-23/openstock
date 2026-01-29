@@ -13,6 +13,14 @@ const navigation = [
   { name: "Notifications", href: "/notifications", icon: "lucide:bell" },
 ];
 
+const hrNavigation = [
+  { name: "Employees", href: "/employees", icon: "lucide:contact" },
+  { name: "Departments", href: "/departments", icon: "lucide:building" },
+  { name: "Attendance", href: "/attendance", icon: "lucide:clock" },
+  { name: "Leave", href: "/leave", icon: "lucide:calendar-off" },
+  { name: "Payroll", href: "/payroll", icon: "lucide:wallet" },
+];
+
 const secondaryNavigation = computed(() => {
   const items = [
     { name: "Taxes", href: "/taxes", icon: "lucide:percent" },
@@ -106,7 +114,45 @@ async function handleLogout() {
         </NuxtLink>
       </div>
 
-      <!-- Separator -->
+      <!-- HR Separator -->
+      <div class="my-4 h-px bg-gray-100" />
+
+      <!-- HR & Payroll navigation -->
+      <div class="flex flex-col gap-1">
+        <p
+          class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2"
+        >
+          HR & Payroll
+        </p>
+        <NuxtLink
+          v-for="item in hrNavigation"
+          :key="item.name"
+          :to="item.href"
+          class="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200"
+          :class="[
+            isActive(item.href)
+              ? 'bg-primary-50 text-primary-700'
+              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+          ]"
+        >
+          <Icon
+            :name="item.icon"
+            class="h-4.5 w-4.5 shrink-0 transition-colors"
+            :class="
+              isActive(item.href)
+                ? 'text-primary-600'
+                : 'text-gray-400 group-hover:text-gray-600'
+            "
+          />
+          <span>{{ item.name }}</span>
+          <div
+            v-if="isActive(item.href)"
+            class="ml-auto h-1.5 w-1.5 rounded-full bg-primary-600"
+          />
+        </NuxtLink>
+      </div>
+
+      <!-- System Separator -->
       <div class="my-4 h-px bg-gray-100" />
 
       <!-- Secondary navigation -->
