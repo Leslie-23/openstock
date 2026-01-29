@@ -387,14 +387,36 @@ export const departments = sqliteTable('departments', {
   ),
 });
 
-export const departmentsRelations = relations(departments, ({ one, many }) => ({
-  manager: one(employees, {
-    fields: [departments.managerId],
-    references: [employees.id],
-    relationName: 'departmentManager',
-  }),
+export const departmentsRelations = relations(departments, ({ many }) => ({
   employees: many(employees),
 }));
+
+// ============================================================================
+// USERS
+// Roles:
+// - admin: Full access, can manage users
+// - member: Full access to inventory (read/write), no user management
+// - viewer: Read-only access to inventory, no modifications allowed
+// ============================================================================
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+  name: text('name').notNull(),
+  role: text('role', { enum: ['admin', 'member', 'viewer'] })
+    .notNull()
+    .default('member'),
+  isActive: integer('is_active', { mode: 'boolean' }).default(true),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(
+    () => new Date()
+  ),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(
+    () => new Date()
+  ),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
 
 // ============================================================================
 // EMPLOYEES
@@ -690,33 +712,6 @@ export type NewPayrollPeriod = typeof payrollPeriods.$inferInsert;
 
 export type PayrollRun = typeof payrollRuns.$inferSelect;
 export type NewPayrollRun = typeof payrollRuns.$inferInsert;
-
-// ============================================================================
-// USERS
-// Roles:
-// - admin: Full access, can manage users
-// - member: Full access to inventory (read/write), no user management
-// - viewer: Read-only access to inventory, no modifications allowed
-// ============================================================================
-export const users = sqliteTable('users', {
-  id: text('id').primaryKey(),
-  email: text('email').notNull().unique(),
-  passwordHash: text('password_hash').notNull(),
-  name: text('name').notNull(),
-  role: text('role', { enum: ['admin', 'member', 'viewer'] })
-    .notNull()
-    .default('member'),
-  isActive: integer('is_active', { mode: 'boolean' }).default(true),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(
-    () => new Date()
-  ),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(
-    () => new Date()
-  ),
-});
-
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
 
 // ============================================================================
 // SETTINGS
