@@ -1,5 +1,4 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'auth' });
 
 const { data: transactions, refresh } = await useFetch('/api/finance/transactions');
 const { toast } = useToast();

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'auth' });
 
 const { data: summary, refresh } = await useFetch('/api/finance/summary');
 
