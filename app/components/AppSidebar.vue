@@ -14,7 +14,7 @@ const navigation = [
 ];
 
 const financeNavigation = [
-  { name: "Finance", href: "/finance", icon: "lucide:landmark" },
+  { name: "Finance", href: "/finance", icon: "lucide:landmark" }, 
   { name: "Transactions", href: "/finance/transactions", icon: "lucide:list" },
   { name: "Cross-Border", href: "/finance/cross-border", icon: "lucide:globe" },
   { name: "Forex", href: "/finance/forex", icon: "lucide:banknote" },
