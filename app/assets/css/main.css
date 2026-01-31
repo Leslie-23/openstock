@@ -29,6 +29,47 @@
   }
 }
 
+@layer components {
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  /* Badge base */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20;
+  }
+
+  .badge-warning {
+    @apply bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20;
+  }
+
+  .badge-danger {
+    @apply bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20;
+  }
+
+  .badge-info {
+    @apply bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20;
+  }
+
+  .badge-neutral {
+    @apply bg-gray-50 text-gray-600 ring-1 ring-inset ring-gray-500/20;
+  }
+
+  .badge-primary {
+    @apply bg-primary-50 text-primary-700 ring-1 ring-inset ring-primary-600/20;
+  }
+}
+
 @layer utilities {
   .glass {
     @apply bg-white/80 backdrop-blur-md border border-white/20;

@@ -85,10 +85,10 @@ const totalProfit = computed(() => {
         <p class="text-sm text-gray-500 mt-1">Nigeria &harr; Ghana transfers with profit per transaction</p>
       </div>
       <div class="flex gap-2">
-        <NuxtLink to="/finance" class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <NuxtLink to="/finance" class="btn-secondary">
           <Icon name="lucide:arrow-left" class="h-4 w-4" /> Back
         </NuxtLink>
-        <button @click="showForm = !showForm" class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
+        <button @click="showForm = !showForm" class="btn-primary">
           <Icon name="lucide:plus" class="h-4 w-4" /> New Transfer
         </button>
       </div>
@@ -164,7 +164,7 @@ const totalProfit = computed(() => {
         <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
         <textarea v-model="form.notes" rows="2" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"></textarea>
       </div>
-      <button @click="submit" class="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
+      <button @click="submit" class="btn-primary">
         Record Transfer
       </button>
     </div>
@@ -190,7 +190,7 @@ const totalProfit = computed(() => {
             </tr>
             <tr v-for="txn in transactions" :key="txn.id" class="hover:bg-gray-50">
               <td class="px-4 py-3">
-                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium" :class="txn.direction === 'ng_to_gh' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'">
+                <span class="badge" :class="txn.direction === 'ng_to_gh' ? 'badge-success' : 'badge-info'">
                   {{ txn.direction === 'ng_to_gh' ? 'NG → GH' : 'GH → NG' }}
                 </span>
               </td>

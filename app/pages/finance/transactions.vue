@@ -52,10 +52,10 @@ async function remove(id: string) {
         <p class="text-sm text-gray-500 mt-1">Simple ins and outs across all business lines</p>
       </div>
       <div class="flex gap-2">
-        <NuxtLink to="/finance" class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <NuxtLink to="/finance" class="btn-secondary">
           <Icon name="lucide:arrow-left" class="h-4 w-4" /> Back
         </NuxtLink>
-        <button @click="showForm = !showForm" class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
+        <button @click="showForm = !showForm" class="btn-primary">
           <Icon name="lucide:plus" class="h-4 w-4" /> Add Transaction
         </button>
       </div>
@@ -98,7 +98,7 @@ async function remove(id: string) {
         <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
         <textarea v-model="form.notes" rows="2" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" placeholder="Optional notes"></textarea>
       </div>
-      <button @click="submit" class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
+      <button @click="submit" class="btn-primary">
         Save Transaction
       </button>
     </div>
@@ -125,11 +125,11 @@ async function remove(id: string) {
           <div>
             <p class="text-sm font-medium text-gray-900">{{ txn.description }}</p>
             <p class="text-xs text-gray-500">
-              <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium" :class="{
-                'bg-blue-50 text-blue-700': txn.businessLine === 'appliance',
-                'bg-green-50 text-green-700': txn.businessLine === 'cross_border',
-                'bg-yellow-50 text-yellow-700': txn.businessLine === 'forex',
-                'bg-orange-50 text-orange-700': txn.businessLine === 'crypto',
+              <span class="badge" :class="{
+                'badge-info': txn.businessLine === 'appliance',
+                'badge-success': txn.businessLine === 'cross_border',
+                'badge-warning': txn.businessLine === 'forex',
+                'badge-primary': txn.businessLine === 'crypto',
               }">{{ txn.businessLine.replace('_', ' ') }}</span>
               <span class="ml-2" v-if="txn.reference">{{ txn.reference }}</span>
             </p>
