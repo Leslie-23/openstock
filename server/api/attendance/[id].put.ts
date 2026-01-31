@@ -1,12 +1,12 @@
 import { eq } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const id = getRouterParam(event, 'id')!;
   const body = await readBody(event);
 
   await db
-    .update(tables.attendance)
+    .update(hrTables.attendance)
     .set({
       clockIn: body.clockIn,
       clockOut: body.clockOut,
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
       notes: body.notes || null,
       updatedAt: new Date(),
     })
-    .where(eq(tables.attendance.id, id));
+    .where(eq(hrTables.attendance.id, id));
 
   return { success: true };
 });

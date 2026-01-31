@@ -1,7 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const body = await readBody(event);
 
   const today = new Date().toISOString().split('T')[0];
@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
   // Check if already clocked in today
   const existing = await db.query.attendance.findFirst({
     where: and(
-      eq(tables.attendance.employeeId, body.employeeId),
-      eq(tables.attendance.date, today)
+      eq(hrTables.attendance.employeeId, body.employeeId),
+      eq(hrTables.attendance.date, today)
     ),
   });
 
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
   const id = generateId('att');
 
-  await db.insert(tables.attendance).values({
+  await db.insert(hrTables.attendance).values({
     id,
     employeeId: body.employeeId,
     date: today,

@@ -1,10 +1,10 @@
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const body = await readBody(event);
 
   const id = generateId('emp');
 
-  await db.insert(tables.employees).values({
+  await db.insert(hrTables.employees).values({
     id,
     userId: body.userId || null,
     employeeCode: body.employeeCode || null,

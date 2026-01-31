@@ -1,10 +1,10 @@
 import { desc } from 'drizzle-orm';
 
 export default defineEventHandler(async () => {
-  const db = useDB();
+  const db = useHRDB();
 
   const periods = await db.query.payrollPeriods.findMany({
-    orderBy: [desc(tables.payrollPeriods.startDate)],
+    orderBy: [desc(hrTables.payrollPeriods.startDate)],
     with: {
       payrollRuns: {
         with: {
