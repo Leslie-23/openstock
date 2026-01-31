@@ -1,10 +1,10 @@
 import { desc } from 'drizzle-orm';
 
 export default defineEventHandler(async () => {
-  const db = useDB();
+  const db = useHRDB();
 
   const departments = await db.query.departments.findMany({
-    orderBy: [desc(tables.departments.createdAt)],
+    orderBy: [desc(hrTables.departments.createdAt)],
   });
 
   return departments;

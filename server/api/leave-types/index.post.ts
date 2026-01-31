@@ -1,10 +1,10 @@
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const body = await readBody(event);
 
   const id = generateId('lvt');
 
-  await db.insert(tables.leaveTypes).values({
+  await db.insert(hrTables.leaveTypes).values({
     id,
     name: body.name,
     description: body.description || null,

@@ -1,11 +1,11 @@
 import { eq } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const id = getRouterParam(event, 'id')!;
 
   const period = await db.query.payrollPeriods.findFirst({
-    where: eq(tables.payrollPeriods.id, id),
+    where: eq(hrTables.payrollPeriods.id, id),
     with: {
       payrollRuns: {
         with: {

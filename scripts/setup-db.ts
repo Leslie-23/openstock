@@ -10,6 +10,7 @@ import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 const DB_PATH = join(process.cwd(), '.data', 'hub', 'cache', 'db.sqlite');
+const HR_DB_PATH = join(process.cwd(), '.data', 'hub', 'cache', 'hr.sqlite');
 
 // Ensure the directory exists
 const dbDir = join(process.cwd(), '.data', 'hub', 'cache');
@@ -214,13 +215,167 @@ try {
     console.log('✓ Inserted default settings');
   }
 
-  console.log(`\n✅ Database setup completed successfully!`);
+  console.log(`\n✅ Production database setup completed!`);
   console.log(`   - ${successCount} table(s) created`);
   console.log(`   - Database location: ${DB_PATH}`);
-  console.log(`\nYou can now run 'npm run dev' to start the application.`);
 } catch (error) {
-  console.error('\n❌ Error during database setup:', error);
+  console.error('\n❌ Error during production database setup:', error);
   process.exit(1);
 } finally {
   db.close();
+}
+
+// ============================================================================
+// HR DATABASE (separate from production)
+// ============================================================================
+console.log('\n--- Setting up HR Database ---\n');
+
+const hrDb = new Database(HR_DB_PATH);
+
+const hrCreateStatements = [
+  `CREATE TABLE IF NOT EXISTS departments (
+    id text PRIMARY KEY NOT NULL,
+    name text NOT NULL,
+    description text,
+    manager_id text,
+    is_active integer DEFAULT 1,
+    created_at integer,
+    updated_at integer
+  )`,
+  `CREATE TABLE IF NOT EXISTS employees (
+    id text PRIMARY KEY NOT NULL,
+    user_id text,
+    employee_code text UNIQUE,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    email text NOT NULL,
+    phone text,
+    date_of_birth text,
+    gender text,
+    address text,
+    city text,
+    postal_code text,
+    country text DEFAULT 'France',
+    department_id text REFERENCES departments(id),
+    position text,
+    employment_type text NOT NULL DEFAULT 'full_time',
+    hire_date text NOT NULL,
+    termination_date text,
+    base_salary real DEFAULT 0,
+    salary_frequency text NOT NULL DEFAULT 'monthly',
+    bank_name text,
+    bank_account text,
+    employee_tax_id text,
+    social_security_number text,
+    emergency_contact_name text,
+    emergency_contact_phone text,
+    status text NOT NULL DEFAULT 'active',
+    notes text,
+    created_at integer,
+    updated_at integer
+  )`,
+  `CREATE TABLE IF NOT EXISTS attendance (
+    id text PRIMARY KEY NOT NULL,
+    employee_id text NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    date text NOT NULL,
+    clock_in text,
+    clock_out text,
+    break_minutes integer DEFAULT 0,
+    overtime_minutes integer DEFAULT 0,
+    status text NOT NULL DEFAULT 'present',
+    notes text,
+    created_at integer,
+    updated_at integer
+  )`,
+  `CREATE TABLE IF NOT EXISTS leave_types (
+    id text PRIMARY KEY NOT NULL,
+    name text NOT NULL,
+    description text,
+    default_days integer DEFAULT 0,
+    is_paid integer DEFAULT 1,
+    color text DEFAULT '#6B7280',
+    is_active integer DEFAULT 1,
+    created_at integer
+  )`,
+  `CREATE TABLE IF NOT EXISTS leave_requests (
+    id text PRIMARY KEY NOT NULL,
+    employee_id text NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    leave_type_id text NOT NULL REFERENCES leave_types(id),
+    start_date text NOT NULL,
+    end_date text NOT NULL,
+    total_days real NOT NULL,
+    reason text,
+    status text NOT NULL DEFAULT 'pending',
+    approved_by text,
+    approved_at integer,
+    created_at integer,
+    updated_at integer
+  )`,
+  `CREATE TABLE IF NOT EXISTS payroll_periods (
+    id text PRIMARY KEY NOT NULL,
+    name text NOT NULL,
+    start_date text NOT NULL,
+    end_date text NOT NULL,
+    status text NOT NULL DEFAULT 'draft',
+    processed_by text,
+    processed_at integer,
+    notes text,
+    created_at integer,
+    updated_at integer
+  )`,
+  `CREATE TABLE IF NOT EXISTS payroll_runs (
+    id text PRIMARY KEY NOT NULL,
+    payroll_period_id text NOT NULL REFERENCES payroll_periods(id) ON DELETE CASCADE,
+    employee_id text NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    base_salary real NOT NULL,
+    worked_days real DEFAULT 0,
+    overtime_hours real DEFAULT 0,
+    overtime_pay real DEFAULT 0,
+    bonuses real DEFAULT 0,
+    bonus_notes text,
+    deductions real DEFAULT 0,
+    deduction_notes text,
+    tax_amount real DEFAULT 0,
+    social_security real DEFAULT 0,
+    health_insurance real DEFAULT 0,
+    other_deductions real DEFAULT 0,
+    other_deduction_notes text,
+    gross_pay real NOT NULL,
+    net_pay real NOT NULL,
+    status text NOT NULL DEFAULT 'pending',
+    paid_at integer,
+    created_at integer,
+    updated_at integer
+  )`,
+];
+
+let hrSuccessCount = 0;
+
+try {
+  for (const sql of hrCreateStatements) {
+    try {
+      hrDb.exec(sql);
+      hrSuccessCount++;
+      const match = sql.match(/CREATE TABLE IF NOT EXISTS (\w+)/);
+      if (match) {
+        console.log(`✓ Created ${match[1]} (HR DB)`);
+      }
+    } catch (error: any) {
+      if (error.message.includes('already exists')) {
+        // skip
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  console.log(`\n✅ HR database setup completed!`);
+  console.log(`   - ${hrSuccessCount} table(s) created`);
+  console.log(`   - Database location: ${HR_DB_PATH}`);
+  console.log(`\nYou can now run 'npm run dev' to start the application.`);
+} catch (error) {
+  console.error('\n❌ Error during HR database setup:', error);
+  process.exit(1);
+} finally {
+  hrDb.close();
 }

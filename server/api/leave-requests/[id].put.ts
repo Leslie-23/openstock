@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const id = getRouterParam(event, 'id')!;
   const body = await readBody(event);
 
@@ -16,9 +16,9 @@ export default defineEventHandler(async (event) => {
   }
 
   await db
-    .update(tables.leaveRequests)
+    .update(hrTables.leaveRequests)
     .set(updateData)
-    .where(eq(tables.leaveRequests.id, id));
+    .where(eq(hrTables.leaveRequests.id, id));
 
   return { success: true };
 });

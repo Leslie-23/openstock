@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const body = await readBody(event);
 
   const id = generateId('pr');
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
   const netPay = grossPay - totalDeductions;
 
-  await db.insert(tables.payrollRuns).values({
+  await db.insert(hrTables.payrollRuns).values({
     id,
     payrollPeriodId: body.payrollPeriodId,
     employeeId: body.employeeId,

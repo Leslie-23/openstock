@@ -1,14 +1,14 @@
 import { eq } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const body = await readBody(event);
 
   const periodId = body.payrollPeriodId;
 
   // Get all active employees
   const activeEmployees = await db.query.employees.findMany({
-    where: eq(tables.employees.status, 'active'),
+    where: eq(hrTables.employees.status, 'active'),
   });
 
   const runs = [];
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     const totalDeductions = taxAmount + socialSecurity + healthInsurance;
     const netPay = grossPay - totalDeductions;
 
-    await db.insert(tables.payrollRuns).values({
+    await db.insert(hrTables.payrollRuns).values({
       id,
       payrollPeriodId: periodId,
       employeeId: emp.id,
@@ -53,9 +53,9 @@ export default defineEventHandler(async (event) => {
 
   // Mark period as processing
   await db
-    .update(tables.payrollPeriods)
+    .update(hrTables.payrollPeriods)
     .set({ status: 'processing', updatedAt: new Date() })
-    .where(eq(tables.payrollPeriods.id, periodId));
+    .where(eq(hrTables.payrollPeriods.id, periodId));
 
   return { generated: runs.length, runs };
 });

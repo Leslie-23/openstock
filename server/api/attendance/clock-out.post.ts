@@ -1,7 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
-  const db = useDB();
+  const db = useHRDB();
   const body = await readBody(event);
 
   const today = new Date().toISOString().split('T')[0];
@@ -9,8 +9,8 @@ export default defineEventHandler(async (event) => {
 
   const existing = await db.query.attendance.findFirst({
     where: and(
-      eq(tables.attendance.employeeId, body.employeeId),
-      eq(tables.attendance.date, today)
+      eq(hrTables.attendance.employeeId, body.employeeId),
+      eq(hrTables.attendance.date, today)
     ),
   });
 
@@ -41,13 +41,13 @@ export default defineEventHandler(async (event) => {
   }
 
   await db
-    .update(tables.attendance)
+    .update(hrTables.attendance)
     .set({
       clockOut: now,
       overtimeMinutes,
       updatedAt: new Date(),
     })
-    .where(eq(tables.attendance.id, existing.id));
+    .where(eq(hrTables.attendance.id, existing.id));
 
   return { success: true, clockOut: now, overtimeMinutes };
 });
