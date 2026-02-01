@@ -72,9 +72,9 @@ const employmentTypeLabels: Record<string, string> = {
 
 const statusColors: Record<string, string> = {
   active: 'badge-success',
-  on_leave: 'bg-amber-100 text-amber-700',
-  suspended: 'bg-red-100 text-red-700',
-  terminated: 'bg-gray-100 text-gray-600',
+  on_leave: 'badge-warning',
+  suspended: 'badge-danger',
+  terminated: 'badge-neutral',
 };
 
 function openCreateModal() {
