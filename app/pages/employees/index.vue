@@ -71,11 +71,21 @@ const employmentTypeLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  active: 'badge-success',
-  on_leave: 'badge-warning',
-  suspended: 'badge-danger',
-  terminated: 'badge-neutral',
+  active: 'bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide',
+  on_leave: 'bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide',
+  suspended: 'bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide',
+  terminated: 'bg-red-50 text-red-700 border border-red-200 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide'
 };
+function getStatusIcon(status: string): string {
+  const icons: Record<string, string> = {
+    active: 'lucide:check-circle',
+    on_leave: 'lucide:calendar',
+    suspended: 'lucide:alert-circle',
+    terminated: 'lucide:x-circle'
+  };
+  return icons[status] || 'lucide:circle';
+}
+
 
 function openCreateModal() {
   editingEmployee.value = null;
@@ -237,13 +247,15 @@ async function deleteEmployee(id: string, name: string) {
         </template>
 
         <template #type="{ item }">
-          <span class="badge bg-gray-100 text-gray-700 text-xs">
+          <span class="badge bg-gray-100 text-gray-700 text-xs rounded-full px-2 py-0.5 border border-gray-900 tracking-wide ">
             {{ employmentTypeLabels[item.employmentType] || item.employmentType }}
           </span>
         </template>
 
         <template #status="{ item }">
           <span :class="['badge', statusColors[item.status] || 'badge']">
+                <Icon :name="getStatusIcon(item.status)" class="h-2.5 w-2.5" />
+
             {{ item.status.replace('_', ' ') }}
           </span>
         </template>
