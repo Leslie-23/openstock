@@ -212,10 +212,10 @@ const activeEmployees = computed(() =>
 
         <template #status="{ item }">
           <span :class="['badge text-xs', {
-            'bg-amber-100 text-amber-700': item.status === 'pending',
+            'badge-warning': item.status === 'pending',
             'badge-success': item.status === 'approved',
-            'bg-red-100 text-red-700': item.status === 'rejected',
-            'bg-gray-100 text-gray-500': item.status === 'cancelled',
+            'badge-danger': item.status === 'rejected',
+            'badge-neutral': item.status === 'cancelled',
           }]">
             {{ item.status }}
           </span>

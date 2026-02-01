@@ -16,18 +16,18 @@ const employmentTypeLabels: Record<string, string> = {
 
 const statusColors: Record<string, string> = {
   active: 'badge-success',
-  on_leave: 'bg-amber-100 text-amber-700',
-  suspended: 'bg-red-100 text-red-700',
-  terminated: 'bg-gray-100 text-gray-600',
+  on_leave: 'badge-warning',
+  suspended: 'badge-danger',
+  terminated: 'badge-neutral',
 };
 
 const attendanceStatusColors: Record<string, string> = {
-  present: 'bg-green-100 text-green-700',
-  absent: 'bg-red-100 text-red-700',
-  late: 'bg-amber-100 text-amber-700',
-  half_day: 'bg-blue-100 text-blue-700',
-  holiday: 'bg-purple-100 text-purple-700',
-  weekend: 'bg-gray-100 text-gray-500',
+  present: 'badge-success',
+  absent: 'badge-danger',
+  late: 'badge-warning',
+  half_day: 'badge-info',
+  holiday: 'badge-primary',
+  weekend: 'badge-neutral',
 };
 
 function formatCurrency(amount: number | null) {
@@ -208,10 +208,10 @@ async function updateStatus(status: string) {
             <td class="px-4 py-2 text-xs text-gray-500 max-w-xs truncate">{{ lr.reason || '—' }}</td>
             <td class="px-4 py-2">
               <span :class="['badge text-xs', {
-                'bg-amber-100 text-amber-700': lr.status === 'pending',
+                'badge-warning': lr.status === 'pending',
                 'badge-success': lr.status === 'approved',
-                'bg-red-100 text-red-700': lr.status === 'rejected',
-                'bg-gray-100 text-gray-500': lr.status === 'cancelled',
+                'badge-danger': lr.status === 'rejected',
+                'badge-neutral': lr.status === 'cancelled',
               }]">
                 {{ lr.status }}
               </span>
@@ -246,10 +246,10 @@ async function updateStatus(status: string) {
             <td class="px-4 py-2 text-xs font-mono text-right font-semibold text-green-700">{{ formatCurrency(pr.netPay) }}</td>
             <td class="px-4 py-2">
               <span :class="['badge text-xs', {
-                'bg-amber-100 text-amber-700': pr.status === 'pending',
+                'badge-warning': pr.status === 'pending',
                 'badge-success': pr.status === 'approved',
-                'bg-green-100 text-green-700': pr.status === 'paid',
-                'bg-gray-100 text-gray-500': pr.status === 'cancelled',
+                'badge-info': pr.status === 'paid',
+                'badge-neutral': pr.status === 'cancelled',
               }]">
                 {{ pr.status }}
               </span>

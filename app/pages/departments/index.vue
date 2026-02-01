@@ -126,7 +126,7 @@ const totalDepartments = computed(() => departments.value?.length ?? 0);
         </template>
 
         <template #status="{ item }">
-          <span :class="['badge', item.isActive ? 'badge-success' : 'badge']">
+          <span :class="['badge', item.isActive ? 'badge-success' : 'badge-neutral']">
             {{ item.isActive ? 'Active' : 'Inactive' }}
           </span>
         </template>

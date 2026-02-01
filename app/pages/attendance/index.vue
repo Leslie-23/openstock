@@ -36,12 +36,12 @@ const columns = [
 ];
 
 const attendanceStatusColors: Record<string, string> = {
-  present: 'bg-green-100 text-green-700',
-  absent: 'bg-red-100 text-red-700',
-  late: 'bg-amber-100 text-amber-700',
-  half_day: 'bg-blue-100 text-blue-700',
-  holiday: 'bg-purple-100 text-purple-700',
-  weekend: 'bg-gray-100 text-gray-500',
+  present: 'badge-success',
+  absent: 'badge-danger',
+  late: 'badge-warning',
+  half_day: 'badge-info',
+  holiday: 'badge-primary',
+  weekend: 'badge-neutral',
 };
 
 const presentCount = computed(() => records.value?.filter((r: any) => r.status === 'present').length ?? 0);

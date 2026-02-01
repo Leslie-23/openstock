@@ -20,10 +20,10 @@ const totals = computed(() => {
 });
 
 const statusColors: Record<string, string> = {
-  pending: 'bg-amber-100 text-amber-700',
+  pending: 'badge-warning',
   approved: 'badge-success',
-  paid: 'bg-green-100 text-green-700',
-  cancelled: 'bg-gray-100 text-gray-500',
+  paid: 'badge-info',
+  cancelled: 'badge-neutral',
 };
 
 async function updateRunStatus(runId: string, status: string) {
@@ -68,10 +68,10 @@ async function markAllPaid() {
       </div>
       <div class="flex gap-2">
         <span :class="['badge', {
-          'bg-gray-100 text-gray-700': period.status === 'draft',
-          'bg-blue-100 text-blue-700': period.status === 'processing',
+          'badge-neutral': period.status === 'draft',
+          'badge-info': period.status === 'processing',
           'badge-success': period.status === 'completed',
-          'bg-red-100 text-red-700': period.status === 'cancelled',
+          'badge-danger': period.status === 'cancelled',
         }]">
           {{ period.status }}
         </span>

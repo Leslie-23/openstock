@@ -25,10 +25,10 @@ const columns = [
 ];
 
 const statusColors: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-700',
-  processing: 'bg-blue-100 text-blue-700',
+  draft: 'badge-neutral',
+  processing: 'badge-info',
   completed: 'badge-success',
-  cancelled: 'bg-red-100 text-red-700',
+  cancelled: 'badge-danger',
 };
 
 function formatCurrency(amount: number) {
