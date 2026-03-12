@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -c \"sqliteTable\" /c/Users/Administrator/openstock/server/database/*.ts)",
+      "Bash(grep \"sqliteTable\" /c/Users/Administrator/openstock/server/database/*.ts)"
+    ]
+  }
+}

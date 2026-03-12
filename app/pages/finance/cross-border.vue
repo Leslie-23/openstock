@@ -85,12 +85,16 @@ const totalProfit = computed(() => {
         <p class="text-sm text-gray-500 mt-1">Nigeria &harr; Ghana transfers with profit per transaction</p>
       </div>
       <div class="flex gap-2">
+        <UiButton>
         <NuxtLink to="/finance" class="btn-secondary">
           <Icon name="lucide:arrow-left" class="h-4 w-4" /> Back
         </NuxtLink>
+        </UiButton>
+        <UiButton>
         <button @click="showForm = !showForm" class="btn-primary">
           <Icon name="lucide:plus" class="h-4 w-4" /> New Transfer
         </button>
+        </UiButton>
       </div>
     </div>
 

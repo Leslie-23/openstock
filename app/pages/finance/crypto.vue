@@ -67,12 +67,16 @@ const coins = ['BTC', 'ETH', 'USDT', 'BNB', 'SOL', 'XRP'];
         <p class="text-sm text-gray-500 mt-1">Buy and sell BTC and other crypto</p>
       </div>
       <div class="flex gap-2">
+        <UiButton>
         <NuxtLink to="/finance" class="btn-secondary">
           <Icon name="lucide:arrow-left" class="h-4 w-4" /> Back
         </NuxtLink>
+        </UiButton>
+        <UiButton>
         <button @click="showForm = !showForm" class="btn-primary">
           <Icon name="lucide:plus" class="h-4 w-4" /> New Trade
         </button>
+        </UiButton>
       </div>
     </div>
 

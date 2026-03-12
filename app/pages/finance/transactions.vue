@@ -52,12 +52,15 @@ async function remove(id: string) {
         <p class="text-sm text-gray-500 mt-1">Simple ins and outs across all business lines</p>
       </div>
       <div class="flex gap-2">
-        <NuxtLink to="/finance" class="btn-secondary">
-          <Icon name="lucide:arrow-left" class="h-4 w-4" /> Back
-        </NuxtLink>
+        <UiButton>
+          <NuxtLink to="/finance" class="btn-secondary">
+            <Icon name="lucide:arrow-left" class="h-4 w-4" /> Back
+          </NuxtLink>
+        </UiButton>
+        <UiButton>
         <button @click="showForm = !showForm" class="btn-primary">
           <Icon name="lucide:plus" class="h-4 w-4" /> Add Transaction
-        </button>
+        </button></UiButton>
       </div>
     </div>
 
