@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx wrangler:*)",
+      "Bash(sqlite3 \".data/hub/cache/hr.sqlite\" \".tables\")",
+      "Bash(sqlite3 \".data/hub/cache/finance.sqlite\" \".tables\")",
+      "Bash(sqlite3 \".data/hub/cache/hr.sqlite\" \"SELECT COUNT\\(*\\) FROM employees; SELECT COUNT\\(*\\) FROM departments; SELECT COUNT\\(*\\) FROM attendance; SELECT COUNT\\(*\\) FROM leave_types; SELECT COUNT\\(*\\) FROM leave_requests; SELECT COUNT\\(*\\) FROM payroll_periods; SELECT COUNT\\(*\\) FROM payroll_runs;\")",
+      "Bash(sqlite3 \".data/hub/cache/finance.sqlite\" \"SELECT COUNT\\(*\\) FROM transactions; SELECT COUNT\\(*\\) FROM cross_border_transactions; SELECT COUNT\\(*\\) FROM forex_transactions; SELECT COUNT\\(*\\) FROM crypto_transactions;\")",
+      "Bash(sqlite3 \".data/hub/cache/hr.sqlite\" \".dump departments\")",
+      "Bash(sqlite3 .data/hub/cache/hr.sqlite '.dump employees')",
+      "Bash(sqlite3 .data/hub/cache/hr.sqlite '.dump attendance')",
+      "Bash(sqlite3 .data/hub/cache/hr.sqlite '.dump leave_types')",
+      "Bash(sqlite3 .data/hub/cache/hr.sqlite '.dump leave_requests')",
+      "Bash(sqlite3 .data/hub/cache/hr.sqlite '.dump payroll_periods')",
+      "Bash(sqlite3 .data/hub/cache/hr.sqlite '.dump payroll_runs')",
+      "Bash(DB=\".data/hub/d1/miniflare-D1DatabaseObject/7b8799eb95f0bb5448e259812996a461ce40142dacbdea254ea597e307767f45.sqlite\")",
+      "Bash(sqlite3 \"$DB\" \".tables\")",
+      "Bash(sqlite3 \"$DB\" \".dump users\")",
+      "Bash(sqlite3 $DB '.dump taxes')",
+      "Bash(sqlite3 $DB '.dump suppliers')",
+      "Bash(sqlite3 $DB '.dump categories')",
+      "Bash(sqlite3 $DB '.dump products')",
+      "Bash(sqlite3 $DB '.dump supplier_prices')",
+      "Bash(sqlite3 $DB '.dump supplier_price_history')",
+      "Bash(sqlite3 $DB '.dump stock_movements')",
+      "Bash(sqlite3 $DB '.dump settings')",
+      "Bash(sqlite3 \"$DB\" \"SELECT id, email, name, role FROM users;\")",
+      "Bash(for f:*)",
+      "Bash(do sed:*)",
+      "Bash(done)",
+      "Bash(do echo:*)"
+    ]
+  }
+}

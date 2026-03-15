@@ -139,13 +139,29 @@ const ui = {
       >
         <div class="flex justify-between items-start">
           <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Total Valuation
+            Cost Valuation
           </p>
           <Icon :name="currencyIcon" class="h-4 w-4 text-gray-400" />
         </div>
         <div class="mt-2">
           <span class="text-2xl font-bold text-gray-900 font-mono">{{
             formatCurrency(stats?.totalStockValue ?? 0)
+          }}</span>
+        </div>
+      </div>
+
+      <div
+        class="p-5 rounded-lg border border-green-100 bg-green-50/30 shadow-sm hover:border-green-200 transition-colors"
+      >
+        <div class="flex justify-between items-start">
+          <p class="text-xs font-medium text-green-700 uppercase tracking-wide">
+            Selling Valuation
+          </p>
+          <Icon :name="currencyIcon" class="h-4 w-4 text-green-500" />
+        </div>
+        <div class="mt-2">
+          <span class="text-2xl font-bold text-green-700 font-mono">{{
+            formatCurrency(stats?.totalSellingValue ?? 0)
           }}</span>
         </div>
       </div>

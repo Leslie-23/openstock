@@ -43,6 +43,15 @@ export default defineEventHandler(async () => {
   const totalStockValue =
     Math.round((stockValueResult[0]?.total ?? 0) * 100) / 100;
 
+  const sellingValueResult = await db
+    .select({
+      total: sql<number>`COALESCE(SUM(${tables.products.sellingPrice} * ${tables.products.stockQuantity}), 0)`,
+    })
+    .from(tables.products)
+    .where(eq(tables.products.isActive, true));
+  const totalSellingValue =
+    Math.round((sellingValueResult[0]?.total ?? 0) * 100) / 100;
+
   // Calculate items moved out and their total value
   const movedOutResult = await db
     .select({
@@ -70,6 +79,7 @@ export default defineEventHandler(async () => {
     totalSuppliers,
     lowStockCount,
     totalStockValue,
+    totalSellingValue,
     lowStockProducts,
     recentMovements,
     movedOutQuantity,

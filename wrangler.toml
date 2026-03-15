@@ -15,7 +15,7 @@ pages_build_output_dir = ".output/public"
 # Environment Variables
 # =============================================================================
 [vars]
-NUXT_SESSION_PASSWORD = "6ac4efbc5f2e14c0113fa2abd99ef5a64c794e89922bb382ce0bbb5fe29bc208"
+# NUXT_SESSION_PASSWORD = "6ac4efbc5f2e14c0113fa2abd99ef5a64c794e89922bb382ce0bbb5fe29bc208"
 
 # =============================================================================
 # D1 Database
