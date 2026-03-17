@@ -135,6 +135,16 @@ async function updateStatus(status: string) {
       </div>
 
       <div class="card p-4 space-y-3">
+        <h3 class="text-xs font-semibold text-gray-700 uppercase tracking-wide">Tax & Banking</h3>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between"><span class="text-gray-500">Tax ID</span><span>{{ employee.taxId || '—' }}</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Social Security</span><span>{{ employee.socialSecurityNumber || '—' }}</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Bank</span><span>{{ employee.bankName || '—' }}</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Account</span><span>{{ employee.bankAccount || '—' }}</span></div>
+        </div>
+      </div>
+
+      <div class="card p-4 space-y-3">
         <h3 class="text-xs font-semibold text-gray-700 uppercase tracking-wide">Emergency Contact</h3>
         <div class="space-y-2 text-xs">
           <div class="flex justify-between"><span class="text-gray-500">Name</span><span>{{ employee.emergencyContactName || '—' }}</span></div>

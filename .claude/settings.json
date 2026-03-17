@@ -28,7 +28,8 @@
       "Bash(for f:*)",
       "Bash(do sed:*)",
       "Bash(done)",
-      "Bash(do echo:*)"
+      "Bash(do echo:*)",
+      "Bash(sqlite3 \"$DB\" \"SELECT COUNT\\(*\\) FROM employees;\")"
     ]
   }
 }

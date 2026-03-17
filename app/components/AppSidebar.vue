@@ -51,8 +51,11 @@ function isActive(href: string): boolean {
 }
 
 async function handleLogout() {
-  await logout();
-  await router.push("/auth/login");
+  await logout()
+  // refresh page to clear state
+  window.location.reload()
+  await router.push("/auth/login")
+  window.location.reload()
 }
 </script>
 

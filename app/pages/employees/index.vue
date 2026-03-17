@@ -28,6 +28,10 @@ const form = reactive({
   hireDate: '',
   baseSalary: 0,
   salaryFrequency: 'monthly' as string,
+  bankName: '',
+  bankAccount: '',
+  taxId: '',
+  socialSecurityNumber: '',
   emergencyContactName: '',
   emergencyContactPhone: '',
   notes: '',
@@ -94,7 +98,8 @@ function openCreateModal() {
     dateOfBirth: '', gender: '', address: '', city: '', postalCode: '',
     country: 'France', departmentId: '', position: '', employmentType: 'full_time',
     hireDate: new Date().toISOString().split('T')[0], baseSalary: 0,
-    salaryFrequency: 'monthly', emergencyContactName: '', emergencyContactPhone: '', notes: '',
+    salaryFrequency: 'monthly', bankName: '', bankAccount: '', taxId: '', socialSecurityNumber: '',
+    emergencyContactName: '', emergencyContactPhone: '', notes: '',
   });
   isModalOpen.value = true;
 }
@@ -119,6 +124,10 @@ function openEditModal(emp: any) {
     hireDate: emp.hireDate,
     baseSalary: emp.baseSalary || 0,
     salaryFrequency: emp.salaryFrequency || 'monthly',
+    bankName: emp.bankName || '',
+    bankAccount: emp.bankAccount || '',
+    taxId: emp.taxId || '',
+    socialSecurityNumber: emp.socialSecurityNumber || '',
     emergencyContactName: emp.emergencyContactName || '',
     emergencyContactPhone: emp.emergencyContactPhone || '',
     notes: emp.notes || '',
@@ -407,6 +416,34 @@ async function deleteEmployee(id: string, name: string) {
           <div class="mt-3">
             <label class="label">Base Salary</label>
             <UiInput v-model.number="form.baseSalary" type="number" step="0.01" placeholder="0.00" />
+          </div>
+        </div>
+
+        <!-- Tax & Banking -->
+        <div class="rounded border border-gray-200 bg-gray-50 p-3">
+          <h3 class="mb-3 flex items-center gap-1.5 text-xs font-medium text-gray-700 uppercase tracking-wide">
+            <Icon name="lucide:landmark" class="h-3.5 w-3.5" />
+            Tax & Banking
+          </h3>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label class="label">Tax ID</label>
+              <UiInput v-model="form.taxId" placeholder="Tax identification number" />
+            </div>
+            <div>
+              <label class="label">Social Security Number</label>
+              <UiInput v-model="form.socialSecurityNumber" placeholder="Social security number" />
+            </div>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-2 mt-3">
+            <div>
+              <label class="label">Bank Name</label>
+              <UiInput v-model="form.bankName" placeholder="Bank name" />
+            </div>
+            <div>
+              <label class="label">Bank Account</label>
+              <UiInput v-model="form.bankAccount" placeholder="Account number / IBAN" />
+            </div>
           </div>
         </div>
 
