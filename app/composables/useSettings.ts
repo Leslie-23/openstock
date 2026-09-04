@@ -7,6 +7,9 @@ interface ApiSettings {
   lowStockAlert: boolean | number | null;
   outOfStockAlert: boolean | number | null;
   emailDailyReport: boolean | number | null;
+  subscriptionTier: string | null;
+  subscriptionStartDate: string | null;
+  subscriptionEndDate: string | null;
   updatedAt: string | null;
 }
 
@@ -20,6 +23,7 @@ export interface Settings {
     outOfStock: boolean;
     emailDaily: boolean;
   };
+  subscriptionTier: 'free' | 'pro' | 'business';
 }
 
 // Transform API response to frontend shape
@@ -33,6 +37,7 @@ function transformFromApi(api: ApiSettings): Settings {
       outOfStock: Boolean(api.outOfStockAlert),
       emailDaily: Boolean(api.emailDailyReport),
     },
+    subscriptionTier: (api.subscriptionTier as Settings['subscriptionTier']) ?? 'free',
   };
 }
 

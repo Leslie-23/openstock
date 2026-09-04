@@ -1,5 +1,5 @@
 import { users } from '../../database/schema';
-import { eq } from 'drizzle-orm';
+import { eq, count } from 'drizzle-orm';
 import { generateId } from '../../utils/id';
 
 export default defineEventHandler(async (event) => {
@@ -21,6 +21,30 @@ export default defineEventHandler(async (event) => {
   }
 
   const db = useDB();
+
+  // Enforce user limit based on subscription tier
+  const settingsRow = await db
+    .select({ subscriptionTier: tables.settings.subscriptionTier })
+    .from(tables.settings)
+    .where(eq(tables.settings.id, 1))
+    .get();
+  const tier = settingsRow?.subscriptionTier || 'free';
+  const [{ total: userCount }] = await db
+    .select({ total: count() })
+    .from(users);
+  if (tier === 'free' && userCount >= 1) {
+    throw createError({
+      statusCode: 403,
+      message: 'Free plan is limited to 1 user. Upgrade to Pro for up to 5 users.',
+    });
+  }
+  if (tier === 'pro' && userCount >= 5) {
+    throw createError({
+      statusCode: 403,
+      message: 'Pro plan is limited to 5 users. Upgrade to Business for unlimited users.',
+    });
+  }
+
   const body = await readBody(event);
 
   if (!body.email || !body.password || !body.name) {

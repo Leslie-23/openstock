@@ -1,5 +1,27 @@
+import { eq, count } from 'drizzle-orm';
+
 export default defineEventHandler(async (event) => {
   const db = useDB();
+
+  // Enforce product limit based on subscription tier
+  const settingsRow = await db
+    .select({ subscriptionTier: tables.settings.subscriptionTier })
+    .from(tables.settings)
+    .where(eq(tables.settings.id, 1))
+    .get();
+  const tier = settingsRow?.subscriptionTier || 'free';
+  if (tier === 'free') {
+    const [{ total }] = await db
+      .select({ total: count() })
+      .from(tables.products);
+    if (total >= 25) {
+      throw createError({
+        statusCode: 403,
+        message: 'Free plan is limited to 25 products. Upgrade to Pro for unlimited products.',
+      });
+    }
+  }
+
   const body = await readBody(event);
 
   const id = generateId('prod');

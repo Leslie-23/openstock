@@ -733,6 +733,11 @@ export const settings = sqliteTable('settings', {
   emailDailyReport: integer('email_daily_report', { mode: 'boolean' }).default(
     false
   ),
+  subscriptionTier: text('subscription_tier', {
+    enum: ['free', 'pro', 'business'],
+  }).default('free'),
+  subscriptionStartDate: text('subscription_start_date'),
+  subscriptionEndDate: text('subscription_end_date'),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(
     () => new Date()
   ),

@@ -361,6 +361,177 @@ export default defineEventHandler(async (event) => {
     )`,
   ];
 
+  const accountingStatements = [
+    // ---- Accounting Tables ----
+    `CREATE TABLE IF NOT EXISTS accounts (
+      id text PRIMARY KEY NOT NULL,
+      code text NOT NULL UNIQUE,
+      name text NOT NULL,
+      account_type text NOT NULL,
+      account_sub_type text,
+      parent_id text,
+      description text,
+      is_active integer DEFAULT 1,
+      is_system_account integer DEFAULT 0,
+      normal_balance text NOT NULL,
+      created_at integer,
+      updated_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS journal_entries (
+      id text PRIMARY KEY NOT NULL,
+      entry_number text UNIQUE,
+      date text NOT NULL,
+      description text NOT NULL,
+      reference text,
+      reference_type text,
+      status text NOT NULL DEFAULT 'draft',
+      posted_at integer,
+      posted_by text,
+      notes text,
+      created_by text,
+      created_at integer,
+      updated_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS journal_entry_lines (
+      id text PRIMARY KEY NOT NULL,
+      journal_entry_id text NOT NULL REFERENCES journal_entries(id) ON DELETE CASCADE,
+      account_id text NOT NULL REFERENCES accounts(id),
+      debit real DEFAULT 0,
+      credit real DEFAULT 0,
+      description text,
+      created_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS customers (
+      id text PRIMARY KEY NOT NULL,
+      name text NOT NULL,
+      email text,
+      phone text,
+      address text,
+      city text,
+      country text,
+      tax_id text,
+      notes text,
+      is_active integer DEFAULT 1,
+      created_at integer,
+      updated_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS invoices (
+      id text PRIMARY KEY NOT NULL,
+      invoice_number text UNIQUE,
+      customer_id text REFERENCES customers(id),
+      status text NOT NULL DEFAULT 'draft',
+      issue_date text NOT NULL,
+      due_date text NOT NULL,
+      subtotal real DEFAULT 0,
+      tax_total real DEFAULT 0,
+      total real DEFAULT 0,
+      amount_paid real DEFAULT 0,
+      currency text DEFAULT 'GHS',
+      notes text,
+      terms text,
+      journal_entry_id text,
+      created_by text,
+      created_at integer,
+      updated_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS invoice_lines (
+      id text PRIMARY KEY NOT NULL,
+      invoice_id text NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+      product_id text,
+      variant_id text,
+      description text NOT NULL,
+      quantity real NOT NULL,
+      unit_price real NOT NULL,
+      tax_id text,
+      tax_rate real DEFAULT 0,
+      tax_amount real DEFAULT 0,
+      line_total real NOT NULL,
+      sort_order integer DEFAULT 0,
+      created_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS invoice_payments (
+      id text PRIMARY KEY NOT NULL,
+      invoice_id text NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+      amount real NOT NULL,
+      payment_date text NOT NULL,
+      payment_method text,
+      reference text,
+      notes text,
+      journal_entry_id text,
+      created_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS expenses (
+      id text PRIMARY KEY NOT NULL,
+      expense_number text UNIQUE,
+      account_id text NOT NULL REFERENCES accounts(id),
+      category_name text,
+      supplier_id text,
+      description text NOT NULL,
+      amount real NOT NULL,
+      tax_id text,
+      tax_rate real DEFAULT 0,
+      tax_amount real DEFAULT 0,
+      total_amount real NOT NULL,
+      date text NOT NULL,
+      payment_method text,
+      reference text,
+      status text DEFAULT 'recorded',
+      notes text,
+      journal_entry_id text,
+      created_by text,
+      created_at integer,
+      updated_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS accounts_receivable (
+      id text PRIMARY KEY NOT NULL,
+      customer_id text NOT NULL REFERENCES customers(id),
+      invoice_id text NOT NULL REFERENCES invoices(id),
+      original_amount real NOT NULL,
+      balance_due real NOT NULL,
+      due_date text NOT NULL,
+      status text DEFAULT 'open',
+      created_at integer,
+      updated_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS accounts_payable (
+      id text PRIMARY KEY NOT NULL,
+      supplier_id text NOT NULL,
+      description text NOT NULL,
+      original_amount real NOT NULL,
+      balance_due real NOT NULL,
+      issue_date text NOT NULL,
+      due_date text NOT NULL,
+      reference text,
+      status text DEFAULT 'open',
+      journal_entry_id text,
+      created_at integer,
+      updated_at integer
+    )`,
+    `CREATE TABLE IF NOT EXISTS ap_payments (
+      id text PRIMARY KEY NOT NULL,
+      accounts_payable_id text NOT NULL REFERENCES accounts_payable(id) ON DELETE CASCADE,
+      amount real NOT NULL,
+      payment_date text NOT NULL,
+      payment_method text,
+      reference text,
+      notes text,
+      journal_entry_id text,
+      created_at integer
+    )`,
+    // Performance indexes for accounting
+    `CREATE INDEX IF NOT EXISTS idx_journal_entries_date ON journal_entries(date)`,
+    `CREATE INDEX IF NOT EXISTS idx_journal_entries_status ON journal_entries(status)`,
+    `CREATE INDEX IF NOT EXISTS idx_journal_entry_lines_entry ON journal_entry_lines(journal_entry_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_journal_entry_lines_account ON journal_entry_lines(account_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_invoices_customer ON invoices(customer_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status)`,
+    `CREATE INDEX IF NOT EXISTS idx_expenses_date ON expenses(date)`,
+    `CREATE INDEX IF NOT EXISTS idx_ar_customer ON accounts_receivable(customer_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_ar_status ON accounts_receivable(status)`,
+    `CREATE INDEX IF NOT EXISTS idx_ap_supplier ON accounts_payable(supplier_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_ap_status ON accounts_payable(status)`,
+  ];
+
   const alterStatements = [
     `ALTER TABLE product_variants ADD COLUMN barcode text`,
     `ALTER TABLE product_variants ADD COLUMN margin_percent real DEFAULT 30`,
@@ -368,6 +539,10 @@ export default defineEventHandler(async (event) => {
     `ALTER TABLE product_variants ADD COLUMN stock_max integer`,
     `ALTER TABLE product_variants ADD COLUMN supplier_id text REFERENCES suppliers(id)`,
     `ALTER TABLE supplier_prices ADD COLUMN purchase_url text`,
+    // Subscription tier columns on settings
+    `ALTER TABLE settings ADD COLUMN subscription_tier text DEFAULT 'free'`,
+    `ALTER TABLE settings ADD COLUMN subscription_start_date text`,
+    `ALTER TABLE settings ADD COLUMN subscription_end_date text`,
   ];
 
   const results: string[] = [];
@@ -376,7 +551,20 @@ export default defineEventHandler(async (event) => {
     for (const sql of createStatements) {
       await db.prepare(sql).run();
     }
-    results.push('Tables created successfully');
+    results.push('Core tables created successfully');
+
+    for (const sql of accountingStatements) {
+      try {
+        await db.prepare(sql).run();
+      } catch (error) {
+        const errorMessage = String(error);
+        if (errorMessage.includes('already exists')) {
+          continue;
+        }
+        throw error;
+      }
+    }
+    results.push('Accounting tables and indexes created successfully');
 
     for (const sql of alterStatements) {
       try {

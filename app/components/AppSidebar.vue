@@ -2,6 +2,7 @@
 const route = useRoute();
 const router = useRouter();
 const { user, isAdmin, logout } = useAuth();
+const { canAccess, isFreeTier } = useSubscription();
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: "lucide:layout-dashboard" },
@@ -29,8 +30,41 @@ const hrNavigation = [
   { name: "Payroll", href: "/payroll", icon: "lucide:wallet" },
 ];
 
+const accountingNavigation = computed(() => {
+  const items: { name: string; href: string; icon: string }[] = [];
+  if (canAccess('invoicing')) {
+    items.push(
+      { name: "Invoices", href: "/accounting/invoices", icon: "lucide:file-text" },
+      { name: "Expenses", href: "/accounting/expenses", icon: "lucide:receipt" },
+      { name: "Customers", href: "/accounting/customers", icon: "lucide:users" },
+    );
+  }
+  if (canAccess('accounting_full')) {
+    items.unshift(
+      { name: "Accounting", href: "/accounting", icon: "lucide:calculator" },
+    );
+    items.push(
+      { name: "Chart of Accounts", href: "/accounting/chart-of-accounts", icon: "lucide:list-tree" },
+      { name: "Journal", href: "/accounting/journal", icon: "lucide:book-open" },
+    );
+  }
+  if (canAccess('ar_ap')) {
+    items.push(
+      { name: "Receivables", href: "/accounting/receivables", icon: "lucide:arrow-down-left" },
+      { name: "Payables", href: "/accounting/payables", icon: "lucide:arrow-up-right" },
+    );
+  }
+  if (canAccess('reports')) {
+    items.push(
+      { name: "Reports", href: "/accounting/reports", icon: "lucide:pie-chart" },
+    );
+  }
+  return items;
+});
+
 const secondaryNavigation = computed(() => {
   const items = [
+    { name: "Subscription", href: "/subscription", icon: "lucide:crown" },
     { name: "Taxes", href: "/taxes", icon: "lucide:percent" },
     { name: "Settings", href: "/settings", icon: "lucide:settings" },
   ];
@@ -126,80 +160,91 @@ async function handleLogout() {
       </div>
 
       <!-- Finance Separator -->
-      <div class="my-4 h-px bg-gray-100" />
+      <template v-if="!isFreeTier">
+        <div class="my-4 h-px bg-gray-100" />
 
-      <!-- Finance navigation -->
-      <div class="flex flex-col gap-1">
-        <p
-          class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2"
-        >
-          Finance
-        </p>
-        <NuxtLink
-          v-for="item in financeNavigation"
-          :key="item.name"
-          :to="item.href"
-          class="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200"
-          :class="[
-            isActive(item.href)
-              ? 'bg-primary-50 text-primary-700'
-              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-          ]"
-        >
-          <Icon
-            :name="item.icon"
-            class="h-4.5 w-4.5 shrink-0 transition-colors"
-            :class="
+        <!-- Finance navigation -->
+        <div class="flex flex-col gap-1">
+          <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Finance</p>
+          <NuxtLink
+            v-for="item in financeNavigation"
+            :key="item.name"
+            :to="item.href"
+            class="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200"
+            :class="[
               isActive(item.href)
-                ? 'text-primary-600'
-                : 'text-gray-400 group-hover:text-gray-600'
-            "
-          />
-          <span>{{ item.name }}</span>
-          <div
-            v-if="isActive(item.href)"
-            class="ml-auto h-1.5 w-1.5 rounded-full bg-primary-600"
-          />
-        </NuxtLink>
-      </div>
+                ? 'bg-primary-50 text-primary-700'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+            ]"
+          >
+            <Icon
+              :name="item.icon"
+              class="h-4.5 w-4.5 shrink-0 transition-colors"
+              :class="isActive(item.href) ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-600'"
+            />
+            <span>{{ item.name }}</span>
+            <div v-if="isActive(item.href)" class="ml-auto h-1.5 w-1.5 rounded-full bg-primary-600" />
+          </NuxtLink>
+        </div>
+      </template>
+
+      <!-- Accounting Separator -->
+      <template v-if="accountingNavigation.length > 0">
+        <div class="my-4 h-px bg-gray-100" />
+
+        <!-- Accounting navigation -->
+        <div class="flex flex-col gap-1">
+          <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Accounting</p>
+          <NuxtLink
+            v-for="item in accountingNavigation"
+            :key="item.name"
+            :to="item.href"
+            class="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200"
+            :class="[
+              isActive(item.href)
+                ? 'bg-primary-50 text-primary-700'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+            ]"
+          >
+            <Icon
+              :name="item.icon"
+              class="h-4.5 w-4.5 shrink-0 transition-colors"
+              :class="isActive(item.href) ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-600'"
+            />
+            <span>{{ item.name }}</span>
+            <div v-if="isActive(item.href)" class="ml-auto h-1.5 w-1.5 rounded-full bg-primary-600" />
+          </NuxtLink>
+        </div>
+      </template>
 
       <!-- HR Separator -->
-      <div class="my-4 h-px bg-gray-100" />
+      <template v-if="!isFreeTier">
+        <div class="my-4 h-px bg-gray-100" />
 
-      <!-- HR & Payroll navigation -->
-      <div class="flex flex-col gap-1">
-        <p
-          class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2"
-        >
-          HR & Payroll
-        </p>
-        <NuxtLink
-          v-for="item in hrNavigation"
-          :key="item.name"
-          :to="item.href"
-          class="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200"
-          :class="[
-            isActive(item.href)
-              ? 'bg-primary-50 text-primary-700'
-              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-          ]"
-        >
-          <Icon
-            :name="item.icon"
-            class="h-4.5 w-4.5 shrink-0 transition-colors"
-            :class="
+        <!-- HR & Payroll navigation -->
+        <div class="flex flex-col gap-1">
+          <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">HR & Payroll</p>
+          <NuxtLink
+            v-for="item in hrNavigation"
+            :key="item.name"
+            :to="item.href"
+            class="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200"
+            :class="[
               isActive(item.href)
-                ? 'text-primary-600'
-                : 'text-gray-400 group-hover:text-gray-600'
-            "
-          />
-          <span>{{ item.name }}</span>
-          <div
-            v-if="isActive(item.href)"
-            class="ml-auto h-1.5 w-1.5 rounded-full bg-primary-600"
-          />
-        </NuxtLink>
-      </div>
+                ? 'bg-primary-50 text-primary-700'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+            ]"
+          >
+            <Icon
+              :name="item.icon"
+              class="h-4.5 w-4.5 shrink-0 transition-colors"
+              :class="isActive(item.href) ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-600'"
+            />
+            <span>{{ item.name }}</span>
+            <div v-if="isActive(item.href)" class="ml-auto h-1.5 w-1.5 rounded-full bg-primary-600" />
+          </NuxtLink>
+        </div>
+      </template>
 
       <!-- System Separator -->
       <div class="my-4 h-px bg-gray-100" />
