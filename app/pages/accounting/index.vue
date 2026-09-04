@@ -75,7 +75,7 @@ const quickLinks = [
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
       <div v-for="stat in stats" :key="stat.title" class="rounded-xl border border-gray-200 bg-white p-5">
         <div class="flex items-center gap-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-lg" :class="stat.bg">

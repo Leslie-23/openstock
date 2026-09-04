@@ -47,7 +47,7 @@ export const useSubscription = () => {
 
   const isSubscriptionExpired = computed(() => {
     if (tier.value === 'demo') return false;
-    const endDate = (settings.value as any)?.subscriptionEndDate;
+    const endDate = settings.value?.subscriptionEndDate;
     if (!endDate) return false;
     return new Date(endDate) < new Date();
   });

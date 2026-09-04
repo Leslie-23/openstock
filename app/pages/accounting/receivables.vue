@@ -36,7 +36,7 @@ const statusColors: Record<string, string> = {
 
     <div v-if="arData" class="space-y-6">
       <!-- Aging Summary -->
-      <div class="grid grid-cols-6 gap-3">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <div v-for="bucket in agingBuckets" :key="bucket.key" class="rounded-xl border border-gray-200 bg-white p-4">
           <p class="text-xs font-medium text-gray-500">{{ bucket.label }}</p>
           <p class="mt-1 text-lg font-bold" :class="bucket.color">

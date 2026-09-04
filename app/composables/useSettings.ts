@@ -25,6 +25,7 @@ export interface Settings {
     emailDaily: boolean;
   };
   subscriptionTier: 'demo' | 'pro' | 'business';
+  subscriptionEndDate: string | null;
   trialEndsAt: string | null;
 }
 
@@ -40,6 +41,7 @@ function transformFromApi(api: ApiSettings): Settings {
       emailDaily: Boolean(api.emailDailyReport),
     },
     subscriptionTier: (api.subscriptionTier as Settings['subscriptionTier']) ?? 'demo',
+    subscriptionEndDate: api.subscriptionEndDate ?? null,
     trialEndsAt: api.trialEndsAt ?? null,
   };
 }

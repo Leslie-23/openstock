@@ -41,7 +41,7 @@ const accountingNavigation = computed(() => {
   }
   if (canAccess('accountingFull')) {
     items.unshift(
-      { name: "Accounting", href: "/accounting", icon: "lucide:calculator" },
+      { name: "Overview", href: "/accounting", icon: "lucide:calculator" },
     );
     items.push(
       { name: "Chart of Accounts", href: "/accounting/chart-of-accounts", icon: "lucide:list-tree" },
@@ -81,6 +81,12 @@ function isActive(href: string): boolean {
   if (href === "/") {
     return route.path === "/";
   }
+  if (href === "/accounting") {
+    return route.path === "/accounting";
+  }
+  if (href === "/finance") {
+    return route.path === "/finance";
+  }
   return route.path.startsWith(href);
 }
 
@@ -94,7 +100,7 @@ async function handleLogout() {
 </script>
 
 <template>
-  <aside class="flex w-64 flex-col border-r border-gray-200 bg-white">
+  <aside class="flex w-64 min-w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
     <!-- Header -->
     <div class="flex h-16 items-center gap-3 border-b border-gray-100 px-6">
       <div
