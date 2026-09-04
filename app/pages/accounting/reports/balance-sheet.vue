@@ -60,7 +60,7 @@ const exportRows = computed(() => {
       />
     </div>
 
-    <div class="flex items-end gap-4 rounded-xl border border-gray-200 bg-white px-6 py-4">
+    <div class="flex flex-wrap items-end gap-4 rounded-xl border border-gray-200 bg-white px-6 py-4">
       <div>
         <label class="block text-xs font-medium text-gray-500 mb-1">As of Date</label>
         <input type="date" v-model="filters.asOfDate" class="rounded-lg border border-gray-300 px-3 py-2 text-sm" />
@@ -75,7 +75,7 @@ const exportRows = computed(() => {
 
     <div v-if="report" class="space-y-6">
       <!-- Summary -->
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div class="rounded-xl border border-gray-200 bg-white p-5">
           <p class="text-xs font-medium text-gray-500 uppercase">Total Assets</p>
           <p class="mt-2 text-2xl font-bold text-blue-600">GHS {{ fmt(report.assets.total) }}</p>

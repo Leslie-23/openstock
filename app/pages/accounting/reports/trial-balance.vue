@@ -78,7 +78,7 @@ const exportSubtitle = computed(() =>
       />
     </div>
 
-    <div class="flex items-end gap-4 rounded-xl border border-gray-200 bg-white px-6 py-4">
+    <div class="flex flex-wrap items-end gap-4 rounded-xl border border-gray-200 bg-white px-6 py-4">
       <div>
         <label class="block text-xs font-medium text-gray-500 mb-1">From</label>
         <input type="date" v-model="filters.startDate" class="rounded-lg border border-gray-300 px-3 py-2 text-sm" />
@@ -87,7 +87,7 @@ const exportSubtitle = computed(() =>
         <label class="block text-xs font-medium text-gray-500 mb-1">To</label>
         <input type="date" v-model="filters.endDate" class="rounded-lg border border-gray-300 px-3 py-2 text-sm" />
       </div>
-      <div v-if="report" class="flex items-center gap-2 ml-auto">
+      <div v-if="report" class="flex items-center gap-2 sm:ml-auto">
         <div class="h-2 w-2 rounded-full" :class="report.totals.isBalanced ? 'bg-green-500' : 'bg-red-500'"></div>
         <span class="text-sm font-medium" :class="report.totals.isBalanced ? 'text-green-600' : 'text-red-600'">
           {{ report.totals.isBalanced ? 'Balanced' : 'Out of balance!' }}
@@ -96,6 +96,7 @@ const exportSubtitle = computed(() =>
     </div>
 
     <div v-if="report" class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+      <div class="overflow-x-auto">
       <table class="w-full">
         <thead>
           <tr class="border-b border-gray-200 bg-gray-50/50">
@@ -132,6 +133,7 @@ const exportSubtitle = computed(() =>
           </tr>
         </tfoot>
       </table>
+      </div>
       <div v-if="report.accounts.length === 0" class="px-6 py-12 text-center">
         <UiEmptyState title="No transactions" description="Post journal entries to see the trial balance" />
       </div>

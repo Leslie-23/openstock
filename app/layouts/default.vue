@@ -1,15 +1,23 @@
 <script setup lang="ts">
 const { loggedIn } = useUserSession();
+const { isOpen: isSidebarOpen, close: closeSidebar } = useSidebar();
 </script>
 
 <template>
   <!-- Main layout when authenticated -->
   <div v-if="loggedIn" class="flex h-screen overflow-hidden bg-gray-100">
+    <!-- Mobile sidebar backdrop -->
+    <div
+      v-if="isSidebarOpen"
+      class="fixed inset-0 z-40 bg-gray-950/50 lg:hidden"
+      @click="closeSidebar"
+    />
+
     <!-- Sidebar -->
     <AppSidebar />
 
     <!-- Main content -->
-    <div class="flex flex-1 flex-col overflow-hidden">
+    <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
       <!-- Header -->
       <AppHeader />
 

@@ -20,7 +20,7 @@ const TIER_LEVELS: Record<string, number> = {
   business: 2,
 };
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path.startsWith('/auth/') || to.path === '/subscription') return;
 
   // Personal appliance/forex/crypto trading ledger — not part of the general
@@ -32,27 +32,42 @@ export default defineNuxtRouteMiddleware((to) => {
     }
   }
 
-  const { isDemoExpired, isSubscriptionExpired, tier } = useSubscription();
+  // Fetch fresh, uncached — this gate must reflect the real subscription
+  // state on every navigation, not whatever useSettings()'s asyncData cache
+  // happens to be holding from an earlier point in the session. Use
+  // useRequestFetch() (not plain $fetch) so the incoming request's session
+  // cookie is forwarded during SSR — otherwise this call 401s server-side.
+  const requestFetch = useRequestFetch();
+  let freshSettings: { subscriptionTier?: string; trialEndsAt?: string | null; subscriptionEndDate?: string | null } | null = null;
+  try {
+    freshSettings = await requestFetch('/api/settings');
+  } catch {
+    return; // couldn't verify — don't block navigation on a network hiccup
+  }
+  const currentTier = freshSettings?.subscriptionTier || 'demo';
+  const today = new Date();
 
-  if (isDemoExpired.value) {
+  if (currentTier === 'demo' && !freshSettings?.trialEndsAt) {
+    return navigateTo('/subscription');
+  }
+
+  if (currentTier === 'demo' && freshSettings?.trialEndsAt && new Date(freshSettings.trialEndsAt) < today) {
     const toast = useToast();
     toast.error('Your demo has expired. Please subscribe to continue.');
     return navigateTo('/subscription');
   }
 
-  if (isSubscriptionExpired.value) {
+  if (currentTier !== 'demo' && freshSettings?.subscriptionEndDate && new Date(freshSettings.subscriptionEndDate) < today) {
     const toast = useToast();
     toast.error('Your subscription has expired. Please renew to continue.');
     return navigateTo('/subscription');
   }
 
-  if (tier.value === 'demo') return;
+  if (currentTier === 'demo') return;
 
   const requirement = ROUTE_TIERS.find((r) => to.path.startsWith(r.prefix));
   if (!requirement) return;
 
-  const { settings } = useSettings();
-  const currentTier = settings.value?.subscriptionTier || 'demo';
   const currentLevel = TIER_LEVELS[currentTier] ?? 0;
   const requiredLevel = TIER_LEVELS[requirement.minTier] ?? 0;
 

@@ -2,7 +2,7 @@
 const { isAdmin, user } = useAuth();
 const toast = useToast();
 const { settings, refresh: refreshSettings } = useSettings();
-const { isDemoExpired, isSubscriptionExpired, daysLeft, tier } = useSubscription();
+const { trialNotStarted, isDemoExpired, isSubscriptionExpired, daysLeft, tier } = useSubscription();
 const runtimeConfig = useRuntimeConfig();
 const route = useRoute();
 
@@ -101,6 +101,26 @@ async function handlePaystackCheckout(planId: 'pro' | 'business') {
   }
 }
 
+async function startTrial() {
+  if (!isAdmin.value) {
+    toast.error('Permission denied', 'Ask an admin to activate a plan');
+    return;
+  }
+
+  isProcessing.value = true;
+  try {
+    await $fetch('/api/subscription', { method: 'POST', body: { tier: 'demo' } });
+    await refresh();
+    await refreshSettings();
+    toast.success('Trial started', 'You have full access for the next 14 days');
+    navigateTo('/');
+  } catch (e: any) {
+    toast.error('Could not start trial', e.data?.message || 'Please try again');
+  } finally {
+    isProcessing.value = false;
+  }
+}
+
 async function verifyPayment(reference: string) {
   isProcessing.value = true;
   try {
@@ -136,8 +156,21 @@ onMounted(async () => {
       <p class="mt-1 text-sm text-gray-500">Choose the plan that fits your business needs</p>
     </div>
 
+    <!-- Welcome / Choose a Plan Banner -->
+    <div v-if="trialNotStarted" class="rounded-xl border border-primary-200 bg-primary-50 px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+          <Icon name="lucide:rocket" class="h-5 w-5 text-primary-600" />
+        </div>
+        <div>
+          <p class="text-sm font-medium text-primary-900">Welcome!</p>
+          <p class="text-sm text-primary-700">Choose a plan to get started — start a free 14-day trial or subscribe directly.</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Demo Expired Banner -->
-    <div v-if="isDemoExpired" class="rounded-xl border border-red-200 bg-red-50 px-6 py-4">
+    <div v-else-if="isDemoExpired" class="rounded-xl border border-red-200 bg-red-50 px-6 py-4">
       <div class="flex items-center gap-3">
         <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
           <Icon name="lucide:alert-triangle" class="h-5 w-5 text-red-600" />
@@ -241,16 +274,28 @@ onMounted(async () => {
           <div>
             <!-- Current plan button -->
             <button
-              v-if="t.id === currentTier && !isDemoExpired && !isSubscriptionExpired"
+              v-if="t.id === currentTier && !trialNotStarted && !isDemoExpired && !isSubscriptionExpired"
               disabled
               class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-400 cursor-not-allowed"
             >
               Current Plan
             </button>
 
-            <!-- Demo card: no action needed -->
+            <!-- Demo card: start the trial, or explain it's trial-only once a plan is active -->
             <template v-else-if="t.id === 'demo'">
-              <p class="text-center text-xs text-gray-400">Trial period only</p>
+              <UiButton
+                v-if="trialNotStarted && isAdmin"
+                variant="secondary"
+                block
+                :loading="isProcessing"
+                @click="startTrial"
+              >
+                Start Free Trial
+              </UiButton>
+              <p v-else-if="trialNotStarted" class="text-center text-sm text-gray-400">
+                Ask an admin to activate a plan
+              </p>
+              <p v-else class="text-center text-xs text-gray-400">Trial period only</p>
             </template>
 
             <!-- Paystack checkout for pro/business -->

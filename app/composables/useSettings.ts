@@ -59,9 +59,13 @@ function transformToApi(settings: Settings): Partial<ApiSettings> {
 }
 
 export const useSettings = () => {
+  // useRequestFetch() (not plain $fetch) forwards the incoming request's
+  // session cookie during SSR — plain $fetch would 401 server-side since
+  // /api/settings requires auth, silently leaving settings null on first paint.
+  const requestFetch = useRequestFetch();
   const { data: rawSettings, refresh } = useAsyncData<ApiSettings>(
     'settings',
-    () => $fetch('/api/settings')
+    () => requestFetch('/api/settings')
   );
 
   // Transform raw API data to frontend shape

@@ -36,6 +36,10 @@ export const useSubscription = () => {
   const isProTier = computed(() => tier.value === 'pro');
   const isBusinessTier = computed(() => tier.value === 'business');
 
+  const trialNotStarted = computed(() => {
+    return tier.value === 'demo' && !settings.value?.trialEndsAt;
+  });
+
   const isDemoExpired = computed(() => {
     if (tier.value !== 'demo') return false;
     const trialEnd = settings.value?.trialEndsAt;
@@ -59,6 +63,7 @@ export const useSubscription = () => {
   });
 
   function canAccess(feature: Feature): boolean {
+    if (trialNotStarted.value) return false;
     if (isDemoExpired.value) return false;
     if (isSubscriptionExpired.value) return false;
     if (tier.value === 'demo') return true;
@@ -83,6 +88,7 @@ export const useSubscription = () => {
     isDemoTier,
     isProTier,
     isBusinessTier,
+    trialNotStarted,
     isDemoExpired,
     isSubscriptionExpired,
     daysLeft,

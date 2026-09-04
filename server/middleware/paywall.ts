@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
 
   if (!path.startsWith('/api/')) return;
   if (path.startsWith('/api/auth/')) return;
+  if (path.startsWith('/api/_auth/')) return;
   if (path.startsWith('/api/subscription')) return;
   if (path.startsWith('/api/__')) return;
   if (path === '/api/settings' && event.method === 'GET') return;
@@ -54,7 +55,14 @@ export default defineEventHandler(async (event) => {
 
   if (currentTier === 'demo') {
     const trialEnd = settingsRow?.trialEndsAt;
-    if (trialEnd && trialEnd < today) {
+    if (!trialEnd) {
+      throw createError({
+        statusCode: 402,
+        statusMessage: 'Payment Required',
+        message: 'Choose a plan to get started.',
+      });
+    }
+    if (trialEnd < today) {
       throw createError({
         statusCode: 402,
         statusMessage: 'Payment Required',

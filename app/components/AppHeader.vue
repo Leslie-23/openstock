@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const router = useRouter();
+const { toggle: toggleSidebar } = useSidebar();
 
 const { notifications, unreadCount, markAsRead, markAllAsRead } =
   useNotifications();
@@ -207,22 +208,33 @@ onMounted(() => {
 
 <template>
   <header
-    class="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-200 bg-white/80 backdrop-blur-md px-6 transition-all"
+    class="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 border-b border-gray-200 bg-white/80 backdrop-blur-md px-3 sm:px-6 transition-all"
   >
+    <!-- Mobile menu toggle -->
+    <UiButton
+      variant="ghost"
+      size="icon"
+      class="shrink-0 text-gray-500 hover:text-gray-900 lg:hidden"
+      aria-label="Open menu"
+      @click="toggleSidebar"
+    >
+      <Icon name="lucide:menu" class="h-5 w-5" />
+    </UiButton>
+
     <!-- Left side: Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-sm">
+    <nav class="hidden min-w-0 items-center gap-2 overflow-x-auto text-sm sm:flex">
       <template v-for="(crumb, index) in breadcrumbs" :key="crumb.href">
         <!-- Separator -->
         <Icon
           v-if="index > 0"
           name="lucide:chevron-right"
-          class="h-4 w-4 text-gray-400"
+          class="h-4 w-4 shrink-0 text-gray-400"
         />
 
         <!-- Crumb -->
         <NuxtLink
           :to="crumb.href"
-          class="flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors"
+          class="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1 transition-colors"
           :class="
             index === breadcrumbs.length - 1
               ? 'font-semibold text-gray-900 bg-gray-100/50'
@@ -236,7 +248,7 @@ onMounted(() => {
     </nav>
 
     <!-- Right side: Actions -->
-    <div class="flex items-center gap-3">
+    <div class="ml-auto flex items-center gap-1 sm:gap-3">
       <!-- Search button -->
       <UiButton
         variant="ghost"
@@ -373,17 +385,17 @@ onMounted(() => {
       </div>
 
       <!-- Separator -->
-      <div class="mx-2 h-6 w-px bg-gray-200" />
+      <div class="mx-1 hidden h-6 w-px bg-gray-200 md:mx-2 md:block" />
 
       <!-- Quick Actions - Compact buttons -->
       <div class="flex items-center gap-2">
-        <NuxtLink to="/movements">
+        <NuxtLink to="/movements" class="hidden md:block">
           <UiButton variant="outline" size="sm" class="gap-2">
             <Icon name="lucide:arrow-down" class="h-4 w-4 text-emerald-600" />
             <span>In</span>
           </UiButton>
         </NuxtLink>
-        <NuxtLink to="/movements">
+        <NuxtLink to="/movements" class="hidden md:block">
           <UiButton variant="outline" size="sm" class="gap-2">
             <Icon name="lucide:arrow-up" class="h-4 w-4 text-red-600" />
             <span>Out</span>
@@ -396,7 +408,7 @@ onMounted(() => {
             class="gap-2 shadow-md shadow-primary-500/20"
           >
             <Icon name="lucide:plus" class="h-4 w-4" />
-            <span>Product</span>
+            <span class="hidden sm:inline">Product</span>
           </UiButton>
         </NuxtLink>
       </div>
@@ -414,7 +426,7 @@ onMounted(() => {
       >
         <div
           v-if="isSearchOpen"
-          class="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]"
+          class="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[15vh]"
         >
           <!-- Backdrop -->
           <div

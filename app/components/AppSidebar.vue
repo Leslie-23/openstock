@@ -3,6 +3,9 @@ const route = useRoute();
 const router = useRouter();
 const { user, isAdmin, logout } = useAuth();
 const { canAccess } = useSubscription();
+const { isOpen: isSidebarOpen, close: closeSidebar } = useSidebar();
+
+watch(() => route.path, () => closeSidebar());
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: "lucide:layout-dashboard" },
@@ -115,7 +118,10 @@ async function handleLogout() {
 </script>
 
 <template>
-  <aside class="flex w-64 min-w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
+  <aside
+    class="fixed inset-y-0 left-0 z-50 flex w-64 min-w-64 shrink-0 -translate-x-full flex-col border-r border-gray-200 bg-white transition-transform duration-200 ease-in-out lg:static lg:z-auto lg:translate-x-0"
+    :class="{ 'translate-x-0': isSidebarOpen }"
+  >
     <!-- Header -->
     <div class="flex h-16 items-center gap-3 border-b border-gray-100 px-6">
       <div
@@ -123,7 +129,7 @@ async function handleLogout() {
       >
         <Icon name="lucide:boxes" class="h-5 w-5" />
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-1 flex-col">
         <span class="text-sm font-bold tracking-tight text-gray-900"
           >Inventra</span
         >
@@ -133,19 +139,27 @@ async function handleLogout() {
           Powered by OpenStock
         </span>
         <span class="text-[9px] font-medium text-gray-400 tracking-wide">
-          Built by 
+          Built by
           <span>
             <a
               href="https://lesliepaul.me"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-gray-400 hover:text-gray-600 underline transition-colors no-underline" 
+              class="text-gray-400 hover:text-gray-600 underline transition-colors no-underline"
             >
             Leslie Paul
             </a>
           </span>
         </span>
       </div>
+      <button
+        type="button"
+        class="shrink-0 text-gray-400 hover:text-gray-600 lg:hidden"
+        aria-label="Close menu"
+        @click="closeSidebar"
+      >
+        <Icon name="lucide:x" class="h-5 w-5" />
+      </button>
     </div>
 
     <!-- Navigation -->
