@@ -151,10 +151,10 @@ async function save(postImmediately: boolean) {
                 <input v-model="line.description" type="text" placeholder="Line memo" class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm" />
               </td>
               <td class="px-4 py-2">
-                <input v-model.number="line.debit" type="number" step="0.01" min="0" class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-right" @focus="if (line.debit === 0) line.debit = '' as any" />
+                <input v-model.number="line.debit" type="number" step="0.01" min="0" class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-right" @focus="line.debit === 0 ? (line.debit = null) : undefined" />
               </td>
               <td class="px-4 py-2">
-                <input v-model.number="line.credit" type="number" step="0.01" min="0" class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-right" @focus="if (line.credit === 0) line.credit = '' as any" />
+                <input v-model.number="line.credit" type="number" step="0.01" min="0" class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-right" @focus="line.credit === 0 ? (line.credit = null) : undefined" />
               </td>
               <td class="px-4 py-2">
                 <button v-if="lines.length > 2" @click="removeLine(i)" class="text-gray-400 hover:text-red-500">
