@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isAdmin } = useAuth();
+const { isAdmin, user } = useAuth();
 const toast = useToast();
 const { settings, refresh: refreshSettings } = useSettings();
 const { isDemoExpired, isSubscriptionExpired, daysLeft, tier } = useSubscription();
@@ -22,7 +22,7 @@ const tiers = [
       'Up to 25 products',
       'Full feature access for 14 days',
       'Dashboard & stock overview',
-      'Finance, HR & Payroll',
+      'HR & Payroll',
       'Invoicing & accounting',
       '1 user',
     ],
@@ -37,7 +37,6 @@ const tiers = [
     popular: true,
     features: [
       'Unlimited products',
-      'Finance (Forex, Crypto, Cross-Border)',
       'HR & Payroll management',
       'Invoicing & billing',
       'Expense tracking',
@@ -81,7 +80,7 @@ async function handlePaystackCheckout(planId: 'pro' | 'business') {
   isProcessing.value = true;
   try {
     const callbackUrl = `${window.location.origin}/subscription?verify=true`;
-    const email = settings.value?.businessEmail || settings.value?.email || '';
+    const email = user.value?.email || '';
 
     const result = await $fetch('/api/subscription/initialize', {
       method: 'POST',

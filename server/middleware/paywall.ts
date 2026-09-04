@@ -7,7 +7,6 @@ const TIER_LEVELS: Record<string, number> = {
 };
 
 const ROUTE_REQUIREMENTS: { prefix: string; minTier: string }[] = [
-  { prefix: '/api/finance', minTier: 'pro' },
   { prefix: '/api/employees', minTier: 'pro' },
   { prefix: '/api/departments', minTier: 'pro' },
   { prefix: '/api/attendance', minTier: 'pro' },
@@ -33,6 +32,12 @@ export default defineEventHandler(async (event) => {
   if (path === '/api/settings' && event.method === 'GET') return;
   if (path === '/api/accounting/seed-accounts') return;
 
+  // Personal appliance/forex/crypto trading ledger — not part of the general
+  // SME product. Disabled for all customers regardless of subscription tier.
+  if (path.startsWith('/api/finance') && !useRuntimeConfig().public.financeModuleEnabled) {
+    throw createError({ statusCode: 404, message: 'Not found' });
+  }
+
   const db = useDB();
   const settingsRow = await db
     .select({
@@ -51,7 +56,8 @@ export default defineEventHandler(async (event) => {
     const trialEnd = settingsRow?.trialEndsAt;
     if (trialEnd && trialEnd < today) {
       throw createError({
-        statusCode: 403,
+        statusCode: 402,
+        statusMessage: 'Payment Required',
         message: 'Your demo has expired. Please subscribe to continue using the app.',
       });
     }
@@ -61,7 +67,8 @@ export default defineEventHandler(async (event) => {
   const subEnd = settingsRow?.subscriptionEndDate;
   if (subEnd && subEnd < today) {
     throw createError({
-      statusCode: 403,
+      statusCode: 402,
+      statusMessage: 'Payment Required',
       message: 'Your subscription has expired. Please renew to continue.',
     });
   }
@@ -74,7 +81,8 @@ export default defineEventHandler(async (event) => {
 
   if (currentLevel < requiredLevel) {
     throw createError({
-      statusCode: 403,
+      statusCode: 402,
+      statusMessage: 'Payment Required',
       message: `This feature requires a ${requirement.minTier === 'pro' ? 'Pro' : 'Business'} subscription`,
     });
   }

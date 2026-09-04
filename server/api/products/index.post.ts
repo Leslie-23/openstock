@@ -16,7 +16,8 @@ export default defineEventHandler(async (event) => {
       .from(tables.products);
     if (total >= 25) {
       throw createError({
-        statusCode: 403,
+        statusCode: 402,
+        statusMessage: 'Payment Required',
         message: 'Demo plan is limited to 25 products. Subscribe to Pro for unlimited products.',
       });
     }

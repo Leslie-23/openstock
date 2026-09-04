@@ -12,11 +12,14 @@
     "db:generate": "drizzle-kit generate",
     "db:populate": "npx tsx scripts/populate-db.ts",
     "db:populate:full": "npx tsx scripts/populate-db.ts --full",
-    "db:push": "for f in .data/hub/d1/export/*.sql; do echo \"Executing $f...\"; wrangler d1 execute zento_db --remote --file=\"$f\"; done",
+    "db:push": "for f in .data/hub/d1/export/*.sql; do echo \"Executing $f...\"; wrangler d1 execute openstock-db --remote --file=\"$f\"; done",
     "db:export": "npx tsx scripts/export-db.ts",
     "db:sync": "npm run db:export && npm run db:push",
+    "db:migrate:remote": "wrangler d1 migrations apply openstock-db --remote",
     "deploy:cf": "nuxi build --preset=cloudflare-pages && wrangler pages deploy dist",
-    "db:setup-hr": "npx tsx scripts/setup-db-hr.ts"
+    "db:setup-hr": "npx tsx scripts/setup-db-hr.ts",
+    "db:migrate:remote:inventra": "wrangler d1 migrations apply inventra-db --remote --config wrangler.inventra.toml",
+    "deploy:cf:inventra": "bash scripts/deploy-inventra.sh"
   },
   "dependencies": {
     "@nuxt/fonts": "^0.12.1",
@@ -28,6 +31,9 @@
     "date-fns": "^4.1.0",
     "drizzle-kit": "^0.31.7",
     "drizzle-orm": "^0.44.7",
+    "exceljs": "^4.4.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "nuxt": "^4.2.1",
     "nuxt-auth-utils": "^0.5.25",
     "pinia": "^3.0.4",

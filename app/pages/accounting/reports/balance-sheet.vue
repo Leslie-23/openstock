@@ -19,6 +19,25 @@ const sections = computed(() => {
     { key: 'equity', title: 'Equity', color: 'purple', data: report.value.equity },
   ];
 });
+
+const exportColumns = [
+  { key: 'section', label: 'Section' },
+  { key: 'code', label: 'Code' },
+  { key: 'account', label: 'Account' },
+  { key: 'balance', label: 'Balance' },
+];
+
+const exportRows = computed(() => {
+  if (!report.value) return [];
+  const rows: Record<string, unknown>[] = [];
+  for (const section of sections.value) {
+    for (const acct of section.data.accounts) {
+      rows.push({ section: section.title, code: acct.code || '', account: acct.name, balance: acct.balance.toFixed(2) });
+    }
+    rows.push({ section: section.title, code: '', account: `Total ${section.title}`, balance: section.data.total.toFixed(2) });
+  }
+  return rows;
+});
 </script>
 
 <template>
@@ -31,6 +50,14 @@ const sections = computed(() => {
         <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Balance Sheet</h1>
         <p class="mt-1 text-sm text-gray-500">Financial position as of a specific date</p>
       </div>
+      <ReportExportMenu
+        v-if="report"
+        title="Balance Sheet"
+        :columns="exportColumns"
+        :rows="exportRows"
+        :date-label="filters.asOfDate"
+        :subtitle="`As of ${filters.asOfDate}`"
+      />
     </div>
 
     <div class="flex items-end gap-4 rounded-xl border border-gray-200 bg-white px-6 py-4">

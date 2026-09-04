@@ -1,5 +1,4 @@
 const ROUTE_TIERS: { prefix: string; minTier: 'pro' | 'business' }[] = [
-  { prefix: '/finance', minTier: 'pro' },
   { prefix: '/employees', minTier: 'pro' },
   { prefix: '/departments', minTier: 'pro' },
   { prefix: '/attendance', minTier: 'pro' },
@@ -24,17 +23,26 @@ const TIER_LEVELS: Record<string, number> = {
 export default defineNuxtRouteMiddleware((to) => {
   if (to.path.startsWith('/auth/') || to.path === '/subscription') return;
 
+  // Personal appliance/forex/crypto trading ledger — not part of the general
+  // SME product. Disabled for all customers regardless of subscription tier.
+  if (to.path.startsWith('/finance')) {
+    const config = useRuntimeConfig();
+    if (!config.public.financeModuleEnabled) {
+      return navigateTo('/', { replace: true });
+    }
+  }
+
   const { isDemoExpired, isSubscriptionExpired, tier } = useSubscription();
 
   if (isDemoExpired.value) {
     const toast = useToast();
-    toast.add({ title: 'Your demo has expired. Please subscribe to continue.', color: 'red' });
+    toast.error('Your demo has expired. Please subscribe to continue.');
     return navigateTo('/subscription');
   }
 
   if (isSubscriptionExpired.value) {
     const toast = useToast();
-    toast.add({ title: 'Your subscription has expired. Please renew to continue.', color: 'red' });
+    toast.error('Your subscription has expired. Please renew to continue.');
     return navigateTo('/subscription');
   }
 
@@ -50,10 +58,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (currentLevel < requiredLevel) {
     const toast = useToast();
-    toast.add({
-      title: `This feature requires a ${requirement.minTier === 'pro' ? 'Pro' : 'Business'} subscription`,
-      color: 'amber',
-    });
+    toast.warning(`This feature requires a ${requirement.minTier === 'pro' ? 'Pro' : 'Business'} subscription`);
     return navigateTo('/subscription');
   }
 });

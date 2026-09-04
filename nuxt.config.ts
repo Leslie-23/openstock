@@ -23,6 +23,10 @@ export default defineNuxtConfig({
     paystackSecretKey: '',
     public: {
       paystackPublicKey: '',
+      // Personal appliance/forex/crypto trading ledger — not part of the general SME
+      // product. Left in the codebase for the owner's own private deployment only;
+      // set NUXT_PUBLIC_FINANCE_MODULE_ENABLED=true to turn it back on.
+      financeModuleEnabled: false,
     },
   },
 

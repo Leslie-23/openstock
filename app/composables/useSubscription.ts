@@ -7,7 +7,6 @@ const TIER_LEVELS: Record<Tier, number> = {
 };
 
 type Feature =
-  | 'finance'
   | 'hr'
   | 'invoicing'
   | 'expenses'
@@ -17,7 +16,6 @@ type Feature =
   | 'reports';
 
 const FEATURE_TIERS: Record<Feature, Tier> = {
-  finance: 'pro',
   hr: 'pro',
   invoicing: 'pro',
   expenses: 'pro',

@@ -19,6 +19,43 @@ const typeLabels: Record<string, string> = {
   revenue: 'Revenue',
   expense: 'Expense',
 };
+
+const exportColumns = [
+  { key: 'code', label: 'Code' },
+  { key: 'name', label: 'Account' },
+  { key: 'type', label: 'Type' },
+  { key: 'debit', label: 'Debit' },
+  { key: 'credit', label: 'Credit' },
+  { key: 'balance', label: 'Balance' },
+];
+
+const exportRows = computed(() => {
+  if (!report.value) return [];
+  const rows = report.value.accounts.map((a) => ({
+    code: a.code,
+    name: a.name,
+    type: typeLabels[a.accountType] || a.accountType,
+    debit: a.totalDebit.toFixed(2),
+    credit: a.totalCredit.toFixed(2),
+    balance: a.balance.toFixed(2),
+  }));
+  rows.push({
+    code: '',
+    name: 'Totals',
+    type: '',
+    debit: report.value.totals.debit.toFixed(2),
+    credit: report.value.totals.credit.toFixed(2),
+    balance: '',
+  });
+  return rows;
+});
+
+const exportDateLabel = computed(() =>
+  filters.startDate && filters.endDate ? `${filters.startDate}_to_${filters.endDate}` : undefined,
+);
+const exportSubtitle = computed(() =>
+  filters.startDate && filters.endDate ? `Period: ${filters.startDate} to ${filters.endDate}` : 'All time',
+);
 </script>
 
 <template>
@@ -31,6 +68,14 @@ const typeLabels: Record<string, string> = {
         <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Trial Balance</h1>
         <p class="mt-1 text-sm text-gray-500">Verify that debits equal credits across all accounts</p>
       </div>
+      <ReportExportMenu
+        v-if="report"
+        title="Trial Balance"
+        :columns="exportColumns"
+        :rows="exportRows"
+        :date-label="exportDateLabel"
+        :subtitle="exportSubtitle"
+      />
     </div>
 
     <div class="flex items-end gap-4 rounded-xl border border-gray-200 bg-white px-6 py-4">

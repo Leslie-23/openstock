@@ -31,6 +31,7 @@ export default defineEventHandler(async (event) => {
   const publicRoutes = [
     '/api/auth/check',
     '/api/auth/login',
+    '/api/subscription/webhook',
     '/api/__migrate',
     '/api/__seed',
     '/api/__clear',

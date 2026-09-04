@@ -25,6 +25,35 @@ async function loadLedger() {
 function fmt(n: number) {
   return (n || 0).toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
+const exportColumns = [
+  { key: 'date', label: 'Date' },
+  { key: 'entryNumber', label: 'Entry #' },
+  { key: 'description', label: 'Description' },
+  { key: 'referenceType', label: 'Ref' },
+  { key: 'debit', label: 'Debit' },
+  { key: 'credit', label: 'Credit' },
+  { key: 'balance', label: 'Balance' },
+];
+
+const exportRows = computed(() => {
+  if (!report.value) return [];
+  return report.value.entries.map((e) => ({
+    date: e.date,
+    entryNumber: e.entryNumber,
+    description: e.description,
+    referenceType: e.referenceType || '-',
+    debit: e.debit.toFixed(2),
+    credit: e.credit.toFixed(2),
+    balance: e.balance.toFixed(2),
+  }));
+});
+
+const exportTitle = computed(() =>
+  report.value ? `General Ledger - ${report.value.account.code} ${report.value.account.name}` : 'General Ledger',
+);
+const exportDateLabel = computed(() => `${filters.startDate}_to_${filters.endDate}`);
+const exportSubtitle = computed(() => `Period: ${filters.startDate} to ${filters.endDate}`);
 </script>
 
 <template>
@@ -37,6 +66,14 @@ function fmt(n: number) {
         <h1 class="text-2xl font-semibold tracking-tight text-gray-900">General Ledger</h1>
         <p class="mt-1 text-sm text-gray-500">Detailed transaction history for a specific account</p>
       </div>
+      <ReportExportMenu
+        v-if="report"
+        :title="exportTitle"
+        :columns="exportColumns"
+        :rows="exportRows"
+        :date-label="exportDateLabel"
+        :subtitle="exportSubtitle"
+      />
     </div>
 
     <div class="flex items-end gap-4 rounded-xl border border-gray-200 bg-white px-6 py-4">

@@ -1,8 +1,11 @@
 # =============================================================================
-# OpenStock – Cloudflare Wrangler Configuration
+# Inventra – Cloudflare Wrangler Configuration (feature/paywall-accounting)
+#
+# Separate deployment from production ("openstock", wrangler.toml, main branch).
+# Own D1 database and KV namespace — fully isolated test data.
 # =============================================================================
 
-name = "openstock"
+name = "inventra"
 compatibility_date = "2025-07-15"
 compatibility_flags = ["nodejs_compat"]
 
@@ -14,34 +17,23 @@ pages_build_output_dir = "dist"
 # =============================================================================
 # Environment Variables
 # =============================================================================
-# Secrets (NUXT_SESSION_PASSWORD, NUXT_PAYSTACK_SECRET_KEY, NUXT_ADMIN_SECRET_KEY,
-# NUXT_PUBLIC_PAYSTACK_PUBLIC_KEY) are NOT set here — this file is committed to a
-# public repo. Set them via `wrangler pages secret put <NAME>` or the Cloudflare
-# dashboard (Pages project > Settings > Environment variables) instead.
+# Secrets are NOT set here — set via `wrangler pages secret put <NAME> --project-name inventra`
+# or the Cloudflare dashboard instead.
 
 # =============================================================================
 # D1 Database
 # =============================================================================
-# Created via: npx wrangler d1 create openstock-db
+# Created via: npx wrangler d1 create inventra-db
 [[d1_databases]]
 binding = "DB"
-database_name = "openstock-db"
-database_id = "6a569d92-e400-43b6-a62f-27ddb4f06925"
+database_name = "inventra-db"
+database_id = "c190722d-8fa5-4d20-8aa2-619ee7431150"
 migrations_dir = "server/database/migrations"
 
 # =============================================================================
 # KV Namespace (Sessions / Cache)
 # =============================================================================
-# Created via: npx wrangler kv namespace create openstock_kv
+# Created via: npx wrangler kv namespace create inventra_kv
 [[kv_namespaces]]
 binding = "KV"
-id = "12772ab11e4e488eb822cdbbe395ffcb"
-
-# =============================================================================
-# (Optional) R2 Bucket – Product Images / Files
-# =============================================================================
-# Uncomment only if you actually create the bucket
-#
-# [[r2_buckets]]
-# binding = "openstock_files"
-# bucket_name = "openstock-files"
+id = "81d08f00a4cd460da69598f05b5bc4d7"

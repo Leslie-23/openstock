@@ -34,13 +34,15 @@ export default defineEventHandler(async (event) => {
     .from(users);
   if (tier === 'demo' && userCount >= 1) {
     throw createError({
-      statusCode: 403,
+      statusCode: 402,
+      statusMessage: 'Payment Required',
       message: 'Demo plan is limited to 1 user. Subscribe to Pro for up to 5 users.',
     });
   }
   if (tier === 'pro' && userCount >= 5) {
     throw createError({
-      statusCode: 403,
+      statusCode: 402,
+      statusMessage: 'Payment Required',
       message: 'Pro plan is limited to 5 users. Upgrade to Business for unlimited users.',
     });
   }

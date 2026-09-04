@@ -329,67 +329,70 @@ const supplierSummary = computed(() => {
 // ============================================================================
 // EXPORT
 // ============================================================================
-function exportCSV() {
-  if (!products.value) return;
+const inventoryExportColumns = [
+  { key: 'name', label: 'Name' },
+  { key: 'sku', label: 'SKU' },
+  { key: 'category', label: 'Category' },
+  { key: 'stock', label: 'Stock' },
+  { key: 'stockMin', label: 'Min Stock' },
+  { key: 'costPrice', label: 'Cost Price' },
+  { key: 'sellingPrice', label: 'Selling Price' },
+  { key: 'marginPercent', label: 'Margin %' },
+  { key: 'costValue', label: 'Stock Value (Cost)' },
+  { key: 'sellingValue', label: 'Stock Value (Selling)' },
+  { key: 'potentialProfit', label: 'Potential Profit' },
+  { key: 'status', label: 'Status' },
+];
 
-  const headers = ['Name', 'SKU', 'Category', 'Stock', 'Min Stock', 'Cost Price', 'Selling Price', 'Margin %', 'Stock Value (Cost)', 'Stock Value (Selling)', 'Potential Profit', 'Status'];
-  const rows = products.value.map(p => {
+const inventoryExportRows = computed(() => {
+  if (!products.value) return [];
+  return products.value.map(p => {
     const stock = p.stockQuantity || 0;
     const costVal = stock * (p.costPrice || 0);
     const sellVal = stock * (p.sellingPrice || 0);
     const status = stock <= 0 ? 'Out of stock' : (p.stockMin && stock <= p.stockMin ? 'Low stock' : 'In stock');
-    return [
-      p.name,
-      p.sku || '',
-      p.category?.name || 'Uncategorized',
+    return {
+      name: p.name,
+      sku: p.sku || '',
+      category: p.category?.name || 'Uncategorized',
       stock,
-      p.stockMin || 0,
-      (p.costPrice || 0).toFixed(2),
-      (p.sellingPrice || 0).toFixed(2),
-      (p.marginPercent || 0).toFixed(1),
-      costVal.toFixed(2),
-      sellVal.toFixed(2),
-      (sellVal - costVal).toFixed(2),
+      stockMin: p.stockMin || 0,
+      costPrice: (p.costPrice || 0).toFixed(2),
+      sellingPrice: (p.sellingPrice || 0).toFixed(2),
+      marginPercent: (p.marginPercent || 0).toFixed(1),
+      costValue: costVal.toFixed(2),
+      sellingValue: sellVal.toFixed(2),
+      potentialProfit: (sellVal - costVal).toFixed(2),
       status,
-    ];
+    };
   });
+});
 
-  const csv = [headers.join(','), ...rows.map(r => r.map(v => `"${v}"`).join(','))].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `inventory-report-${new Date().toISOString().split('T')[0]}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+const movementsExportColumns = [
+  { key: 'date', label: 'Date' },
+  { key: 'product', label: 'Product' },
+  { key: 'type', label: 'Type' },
+  { key: 'quantity', label: 'Quantity' },
+  { key: 'stockBefore', label: 'Stock Before' },
+  { key: 'stockAfter', label: 'Stock After' },
+  { key: 'unitCost', label: 'Unit Cost' },
+  { key: 'reference', label: 'Reference' },
+  { key: 'reason', label: 'Reason' },
+];
 
-function exportMovementsCSV() {
-  const mvs = filteredMovements.value;
-  if (!mvs.length) return;
-
-  const headers = ['Date', 'Product', 'Type', 'Quantity', 'Stock Before', 'Stock After', 'Unit Cost', 'Reference', 'Reason'];
-  const rows = mvs.map(m => [
-    new Date(m.createdAt).toISOString().split('T')[0],
-    m.product?.name || '',
-    m.type,
-    m.quantity,
-    m.stockBefore,
-    m.stockAfter,
-    (m.unitCost || 0).toFixed(2),
-    m.reference || '',
-    m.reason || '',
-  ]);
-
-  const csv = [headers.join(','), ...rows.map(r => r.map(v => `"${v}"`).join(','))].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `movements-report-${new Date().toISOString().split('T')[0]}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+const movementsExportRows = computed(() => {
+  return filteredMovements.value.map(m => ({
+    date: new Date(m.createdAt).toISOString().split('T')[0],
+    product: m.product?.name || '',
+    type: m.type,
+    quantity: m.quantity,
+    stockBefore: m.stockBefore,
+    stockAfter: m.stockAfter,
+    unitCost: (m.unitCost || 0).toFixed(2),
+    reference: m.reference || '',
+    reason: m.reason || '',
+  }));
+});
 
 // Most active products by movement count
 const mostActiveProducts = computed(() => {
@@ -426,14 +429,21 @@ const ui = {
         <p class="mt-1 text-sm text-gray-500">Interactive inventory analytics, profitability insights, and export tools.</p>
       </div>
       <div class="flex gap-2">
-        <UiButton variant="outline" @click="exportMovementsCSV" v-if="activeTab === 'movements'">
-          <Icon name="lucide:download" class="mr-2 h-4 w-4" />
-          Export Movements
-        </UiButton>
-        <UiButton @click="exportCSV">
-          <Icon name="lucide:download" class="mr-2 h-4 w-4" />
-          Export Inventory
-        </UiButton>
+        <ReportExportMenu
+          v-if="activeTab === 'movements'"
+          title="Stock Movements Report"
+          label="Export Movements"
+          :columns="movementsExportColumns"
+          :rows="movementsExportRows"
+          :disabled="!filteredMovements.length"
+        />
+        <ReportExportMenu
+          title="Inventory Report"
+          label="Export Inventory"
+          :columns="inventoryExportColumns"
+          :rows="inventoryExportRows"
+          :disabled="!products?.length"
+        />
       </div>
     </div>
 

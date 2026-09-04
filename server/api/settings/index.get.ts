@@ -11,7 +11,10 @@ export default defineEventHandler(async (event) => {
     return existingSettings;
   }
 
-  // If not found, create default
+  // If not found, create default with a 14-day trial starting now
+  const trialEnd = new Date();
+  trialEnd.setDate(trialEnd.getDate() + 14);
+
   const [newSettings] = await db.insert(settings).values({
     id: 1,
     businessName: 'OpenStock Inc.',
@@ -20,6 +23,8 @@ export default defineEventHandler(async (event) => {
     lowStockAlert: true,
     outOfStockAlert: true,
     emailDailyReport: false,
+    subscriptionTier: 'demo',
+    trialEndsAt: trialEnd.toISOString().split('T')[0],
   }).returning();
 
   return newSettings;

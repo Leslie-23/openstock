@@ -12,6 +12,31 @@ const { data: report, refresh } = await useFetch('/api/accounting/reports/profit
 function fmt(n: number) {
   return (n || 0).toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
+const exportColumns = [
+  { key: 'section', label: 'Section' },
+  { key: 'code', label: 'Code' },
+  { key: 'account', label: 'Account' },
+  { key: 'amount', label: 'Amount' },
+];
+
+const exportRows = computed(() => {
+  if (!report.value) return [];
+  const rows: Record<string, unknown>[] = [];
+  for (const acct of report.value.revenue.accounts) {
+    rows.push({ section: 'Revenue', code: acct.code, account: acct.name, amount: acct.amount.toFixed(2) });
+  }
+  rows.push({ section: 'Revenue', code: '', account: 'Total Revenue', amount: report.value.revenue.total.toFixed(2) });
+  for (const acct of report.value.expenses.accounts) {
+    rows.push({ section: 'Expenses', code: acct.code, account: acct.name, amount: acct.amount.toFixed(2) });
+  }
+  rows.push({ section: 'Expenses', code: '', account: 'Total Expenses', amount: report.value.expenses.total.toFixed(2) });
+  rows.push({ section: '', code: '', account: 'Net Income', amount: report.value.netIncome.toFixed(2) });
+  return rows;
+});
+
+const exportDateLabel = computed(() => `${filters.startDate}_to_${filters.endDate}`);
+const exportSubtitle = computed(() => `Period: ${filters.startDate} to ${filters.endDate}`);
 </script>
 
 <template>
@@ -24,6 +49,14 @@ function fmt(n: number) {
         <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Profit & Loss Statement</h1>
         <p class="mt-1 text-sm text-gray-500">Income statement for the selected period</p>
       </div>
+      <ReportExportMenu
+        v-if="report"
+        title="Profit and Loss Statement"
+        :columns="exportColumns"
+        :rows="exportRows"
+        :date-label="exportDateLabel"
+        :subtitle="exportSubtitle"
+      />
     </div>
 
     <!-- Date Range -->
