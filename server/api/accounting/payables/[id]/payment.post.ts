@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
     date: body.paymentDate,
     description: `AP Payment: ${apRecord.description}`,
     reference: id,
-    referenceType: 'ap_payment',
+    referenceType: 'apPayment',
     lines: [
       {
         accountId: apAccount.id,

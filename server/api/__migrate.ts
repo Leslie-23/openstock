@@ -540,9 +540,13 @@ export default defineEventHandler(async (event) => {
     `ALTER TABLE product_variants ADD COLUMN supplier_id text REFERENCES suppliers(id)`,
     `ALTER TABLE supplier_prices ADD COLUMN purchase_url text`,
     // Subscription tier columns on settings
-    `ALTER TABLE settings ADD COLUMN subscription_tier text DEFAULT 'free'`,
+    `ALTER TABLE settings ADD COLUMN subscription_tier text DEFAULT 'demo'`,
     `ALTER TABLE settings ADD COLUMN subscription_start_date text`,
     `ALTER TABLE settings ADD COLUMN subscription_end_date text`,
+    `ALTER TABLE settings ADD COLUMN trial_ends_at text`,
+    `ALTER TABLE settings ADD COLUMN paystack_customer_code text`,
+    `ALTER TABLE settings ADD COLUMN paystack_subscription_code text`,
+    `ALTER TABLE settings ADD COLUMN paystack_plan_code text`,
   ];
 
   const results: string[] = [];

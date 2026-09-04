@@ -101,7 +101,7 @@ export default defineEventHandler(async (event) => {
     equity: {
       accounts: [
         ...equity,
-        { accountId: null, code: '', name: 'Net Income (Current Period)', subType: 'retained_earnings', balance: round2(netIncome) },
+        { accountId: null, code: '', name: 'Net Income (Current Period)', subType: 'retainedEarnings', balance: round2(netIncome) },
       ],
       total: round2(totalEquity),
     },

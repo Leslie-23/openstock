@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
   await db.insert(financeTables.transactions).values({
     id: generateId('txn'),
     type: 'in',
-    businessLine: 'cross_border',
+    businessLine: 'crossBorder',
     description: `Cross-border: ${body.description}`,
     amount: profitGHS,
     currency: 'GHS',

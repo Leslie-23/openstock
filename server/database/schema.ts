@@ -734,10 +734,14 @@ export const settings = sqliteTable('settings', {
     false
   ),
   subscriptionTier: text('subscription_tier', {
-    enum: ['free', 'pro', 'business'],
-  }).default('free'),
+    enum: ['demo', 'pro', 'business'],
+  }).default('demo'),
   subscriptionStartDate: text('subscription_start_date'),
   subscriptionEndDate: text('subscription_end_date'),
+  trialEndsAt: text('trial_ends_at'),
+  paystackCustomerCode: text('paystack_customer_code'),
+  paystackSubscriptionCode: text('paystack_subscription_code'),
+  paystackPlanCode: text('paystack_plan_code'),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(
     () => new Date()
   ),

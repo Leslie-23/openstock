@@ -73,7 +73,7 @@ const payingRecord = ref<any>(null);
 const payForm = reactive({
   amount: '' as string | number,
   paymentDate: new Date().toISOString().split('T')[0],
-  paymentMethod: 'bank_transfer',
+  paymentMethod: 'bankTransfer',
   reference: '',
   notes: '',
 });
@@ -82,7 +82,7 @@ function openPay(record: any) {
   payingRecord.value = record;
   payForm.amount = record.balanceDue;
   payForm.paymentDate = new Date().toISOString().split('T')[0];
-  payForm.paymentMethod = 'bank_transfer';
+  payForm.paymentMethod = 'bankTransfer';
   payForm.reference = '';
   payForm.notes = '';
   showPayModal.value = true;
@@ -119,8 +119,8 @@ async function recordPayment() {
 
 const paymentMethods = [
   { value: 'cash', label: 'Cash' },
-  { value: 'bank_transfer', label: 'Bank Transfer' },
-  { value: 'mobile_money', label: 'Mobile Money' },
+  { value: 'bankTransfer', label: 'Bank Transfer' },
+  { value: 'mobileMoney', label: 'Mobile Money' },
   { value: 'check', label: 'Cheque' },
   { value: 'other', label: 'Other' },
 ];

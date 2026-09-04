@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
   if (arRecord) {
     await db
       .update(accountingTables.accountsReceivable)
-      .set({ status: 'written_off', updatedAt: now })
+      .set({ status: 'writtenOff', updatedAt: now })
       .where(eq(accountingTables.accountsReceivable.id, arRecord.id));
   }
 

@@ -18,10 +18,10 @@ export const accounts = sqliteTable('accounts', {
   }).notNull(),
   accountSubType: text('account_sub_type', {
     enum: [
-      'cash', 'bank', 'receivable', 'inventory', 'other_current_asset',
-      'fixed_asset', 'payable', 'tax_payable', 'other_current_liability',
-      'long_term_liability', 'owners_equity', 'retained_earnings',
-      'sales', 'other_income', 'cogs', 'operating_expense',
+      'cash', 'bank', 'receivable', 'inventory', 'otherCurrentAsset',
+      'fixedAsset', 'payable', 'taxPayable', 'otherCurrentLiability',
+      'longTermLiability', 'ownersEquity', 'retainedEarnings',
+      'sales', 'otherIncome', 'cogs', 'operatingExpense',
     ],
   }),
   parentId: text('parent_id'),
@@ -53,7 +53,7 @@ export const journalEntries = sqliteTable('journal_entries', {
   description: text('description').notNull(),
   reference: text('reference'),
   referenceType: text('reference_type', {
-    enum: ['invoice', 'expense', 'payroll', 'stock_movement', 'manual', 'cross_border', 'forex', 'crypto', 'payment', 'ap_bill', 'ap_payment'],
+    enum: ['invoice', 'expense', 'payroll', 'stockMovement', 'manual', 'crossBorder', 'forex', 'crypto', 'payment', 'apBill', 'apPayment'],
   }),
   status: text('status', { enum: ['draft', 'posted', 'voided'] }).notNull().default('draft'),
   postedAt: integer('posted_at', { mode: 'timestamp' }),
@@ -192,7 +192,7 @@ export const invoicePayments = sqliteTable('invoice_payments', {
   amount: real('amount').notNull(),
   paymentDate: text('payment_date').notNull(),
   paymentMethod: text('payment_method', {
-    enum: ['cash', 'bank_transfer', 'mobile_money', 'check', 'other'],
+    enum: ['cash', 'bankTransfer', 'mobileMoney', 'check', 'other'],
   }),
   reference: text('reference'),
   notes: text('notes'),
@@ -226,7 +226,7 @@ export const expenses = sqliteTable('expenses', {
   totalAmount: real('total_amount').notNull(),
   date: text('date').notNull(),
   paymentMethod: text('payment_method', {
-    enum: ['cash', 'bank_transfer', 'mobile_money', 'check', 'other'],
+    enum: ['cash', 'bankTransfer', 'mobileMoney', 'check', 'other'],
   }),
   reference: text('reference'),
   status: text('status', { enum: ['recorded', 'voided'] }).default('recorded'),
@@ -259,7 +259,7 @@ export const accountsReceivable = sqliteTable('accounts_receivable', {
   balanceDue: real('balance_due').notNull(),
   dueDate: text('due_date').notNull(),
   status: text('status', {
-    enum: ['open', 'partial', 'paid', 'overdue', 'written_off'],
+    enum: ['open', 'partial', 'paid', 'overdue', 'writtenOff'],
   }).default('open'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
@@ -311,7 +311,7 @@ export const apPayments = sqliteTable('ap_payments', {
   amount: real('amount').notNull(),
   paymentDate: text('payment_date').notNull(),
   paymentMethod: text('payment_method', {
-    enum: ['cash', 'bank_transfer', 'mobile_money', 'check', 'other'],
+    enum: ['cash', 'bankTransfer', 'mobileMoney', 'check', 'other'],
   }),
   reference: text('reference'),
   notes: text('notes'),

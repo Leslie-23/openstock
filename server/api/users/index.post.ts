@@ -28,14 +28,14 @@ export default defineEventHandler(async (event) => {
     .from(tables.settings)
     .where(eq(tables.settings.id, 1))
     .get();
-  const tier = settingsRow?.subscriptionTier || 'free';
+  const tier = settingsRow?.subscriptionTier || 'demo';
   const [{ total: userCount }] = await db
     .select({ total: count() })
     .from(users);
-  if (tier === 'free' && userCount >= 1) {
+  if (tier === 'demo' && userCount >= 1) {
     throw createError({
       statusCode: 403,
-      message: 'Free plan is limited to 1 user. Upgrade to Pro for up to 5 users.',
+      message: 'Demo plan is limited to 1 user. Subscribe to Pro for up to 5 users.',
     });
   }
   if (tier === 'pro' && userCount >= 5) {

@@ -23,7 +23,7 @@ const statusColors: Record<string, string> = {
   partial: 'bg-orange-100 text-orange-700',
   paid: 'bg-green-100 text-green-700',
   overdue: 'bg-red-100 text-red-700',
-  written_off: 'bg-gray-100 text-gray-500',
+  writtenOff: 'bg-gray-100 text-gray-500',
 };
 </script>
 

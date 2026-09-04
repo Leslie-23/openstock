@@ -19,8 +19,11 @@ export default defineNuxtConfig({
 
   // Runtime config for admin operations
   runtimeConfig: {
-    // Server-only (not exposed to client)
-    adminSecretKey: '', // Set via NUXT_ADMIN_SECRET_KEY env var
+    adminSecretKey: '',
+    paystackSecretKey: '',
+    public: {
+      paystackPublicKey: '',
+    },
   },
 
   // Pinia configuration

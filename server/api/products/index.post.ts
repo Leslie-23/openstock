@@ -9,15 +9,15 @@ export default defineEventHandler(async (event) => {
     .from(tables.settings)
     .where(eq(tables.settings.id, 1))
     .get();
-  const tier = settingsRow?.subscriptionTier || 'free';
-  if (tier === 'free') {
+  const tier = settingsRow?.subscriptionTier || 'demo';
+  if (tier === 'demo') {
     const [{ total }] = await db
       .select({ total: count() })
       .from(tables.products);
     if (total >= 25) {
       throw createError({
         statusCode: 403,
-        message: 'Free plan is limited to 25 products. Upgrade to Pro for unlimited products.',
+        message: 'Demo plan is limited to 25 products. Subscribe to Pro for unlimited products.',
       });
     }
   }

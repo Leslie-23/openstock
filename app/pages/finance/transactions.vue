@@ -79,7 +79,7 @@ async function remove(id: string) {
           <label class="block text-sm font-medium text-gray-700 mb-1">Business Line</label>
           <select v-model="form.businessLine" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
             <option value="appliance">Appliance</option>
-            <option value="cross_border">Cross-Border</option>
+            <option value="crossBorder">Cross-Border</option>
             <option value="forex">Forex</option>
             <option value="crypto">Crypto</option>
           </select>
@@ -108,7 +108,7 @@ async function remove(id: string) {
 
     <!-- Filter -->
     <div class="flex gap-2">
-      <button v-for="f in [{v:'all',l:'All'},{v:'appliance',l:'Appliance'},{v:'cross_border',l:'Cross-Border'},{v:'forex',l:'Forex'},{v:'crypto',l:'Crypto'}]" :key="f.v" @click="filter = f.v"
+      <button v-for="f in [{v:'all',l:'All'},{v:'appliance',l:'Appliance'},{v:'crossBorder',l:'Cross-Border'},{v:'forex',l:'Forex'},{v:'crypto',l:'Crypto'}]" :key="f.v" @click="filter = f.v"
         class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
         :class="filter === f.v ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
         {{ f.l }}
@@ -130,10 +130,10 @@ async function remove(id: string) {
             <p class="text-xs text-gray-500">
               <span class="badge" :class="{
                 'badge-info': txn.businessLine === 'appliance',
-                'badge-success': txn.businessLine === 'cross_border',
+                'badge-success': txn.businessLine === 'crossBorder',
                 'badge-warning': txn.businessLine === 'forex',
                 'badge-primary': txn.businessLine === 'crypto',
-              }">{{ txn.businessLine.replace('_', ' ') }}</span>
+              }">{{ txn.businessLine.replace(/([A-Z])/g, ' $1').trim() }}</span>
               <span class="ml-2" v-if="txn.reference">{{ txn.reference }}</span>
             </p>
           </div>

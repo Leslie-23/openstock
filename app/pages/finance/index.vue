@@ -11,7 +11,7 @@ const businessLines = computed(() => {
   const s = summary.value.summary;
   return [
     { name: 'Appliance', key: 'appliance', icon: 'lucide:tv', color: 'bg-blue-500', ...s.appliance },
-    { name: 'Cross-Border', key: 'cross_border', icon: 'lucide:globe', color: 'bg-green-500', ...s.cross_border },
+    { name: 'Cross-Border', key: 'crossBorder', icon: 'lucide:globe', color: 'bg-green-500', ...s.crossBorder },
     { name: 'Forex (USD/GHS)', key: 'forex', icon: 'lucide:banknote', color: 'bg-yellow-500', ...s.forex },
     { name: 'Crypto', key: 'crypto', icon: 'lucide:bitcoin', color: 'bg-orange-500', ...s.crypto },
   ];
@@ -138,7 +138,7 @@ const businessLines = computed(() => {
             </div>
             <div>
               <p class="text-sm font-medium text-gray-900">{{ txn.description }}</p>
-              <p class="text-xs text-gray-500">{{ txn.businessLine.replace('_', ' ') }} &middot; {{ txn.reference || 'No ref' }}</p>
+              <p class="text-xs text-gray-500">{{ txn.businessLine.replace(/([A-Z])/g, ' $1').trim() }} &middot; {{ txn.reference || 'No ref' }}</p>
             </div>
           </div>
           <p class="text-sm font-semibold" :class="txn.type === 'in' ? 'text-green-600' : 'text-red-600'">

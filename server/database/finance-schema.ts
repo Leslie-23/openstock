@@ -21,7 +21,7 @@ import { relations } from 'drizzle-orm';
 export const transactions = sqliteTable('transactions', {
   id: text('id').primaryKey(),
   type: text('type').notNull(), // 'in' | 'out'
-  businessLine: text('business_line').notNull(), // 'appliance' | 'cross_border' | 'forex' | 'crypto'
+  businessLine: text('business_line').notNull(), // 'appliance' | 'crossBorder' | 'forex' | 'crypto'
   description: text('description').notNull(),
   amount: real('amount').notNull(), // amount in base currency (GHS cedis)
   currency: text('currency').default('GHS'), // GHS, NGN, USD, BTC, etc.

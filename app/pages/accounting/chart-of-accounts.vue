@@ -31,26 +31,26 @@ const subTypes: Record<string, { value: string; label: string }[]> = {
     { value: 'bank', label: 'Bank' },
     { value: 'receivable', label: 'Receivable' },
     { value: 'inventory', label: 'Inventory' },
-    { value: 'other_current_asset', label: 'Other Current Asset' },
-    { value: 'fixed_asset', label: 'Fixed Asset' },
+    { value: 'otherCurrentAsset', label: 'Other Current Asset' },
+    { value: 'fixedAsset', label: 'Fixed Asset' },
   ],
   liability: [
     { value: 'payable', label: 'Payable' },
-    { value: 'tax_payable', label: 'Tax Payable' },
-    { value: 'other_current_liability', label: 'Other Current Liability' },
-    { value: 'long_term_liability', label: 'Long Term Liability' },
+    { value: 'taxPayable', label: 'Tax Payable' },
+    { value: 'otherCurrentLiability', label: 'Other Current Liability' },
+    { value: 'longTermLiability', label: 'Long Term Liability' },
   ],
   equity: [
-    { value: 'owners_equity', label: "Owner's Equity" },
-    { value: 'retained_earnings', label: 'Retained Earnings' },
+    { value: 'ownersEquity', label: "Owner's Equity" },
+    { value: 'retainedEarnings', label: 'Retained Earnings' },
   ],
   revenue: [
     { value: 'sales', label: 'Sales' },
-    { value: 'other_income', label: 'Other Income' },
+    { value: 'otherIncome', label: 'Other Income' },
   ],
   expense: [
     { value: 'cogs', label: 'Cost of Goods Sold' },
-    { value: 'operating_expense', label: 'Operating Expense' },
+    { value: 'operatingExpense', label: 'Operating Expense' },
   ],
 };
 

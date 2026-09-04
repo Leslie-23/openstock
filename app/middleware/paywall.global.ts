@@ -16,7 +16,7 @@ const ROUTE_TIERS: { prefix: string; minTier: 'pro' | 'business' }[] = [
 ];
 
 const TIER_LEVELS: Record<string, number> = {
-  free: 0,
+  demo: 0,
   pro: 1,
   business: 2,
 };
@@ -24,20 +24,36 @@ const TIER_LEVELS: Record<string, number> = {
 export default defineNuxtRouteMiddleware((to) => {
   if (to.path.startsWith('/auth/') || to.path === '/subscription') return;
 
+  const { isDemoExpired, isSubscriptionExpired, tier } = useSubscription();
+
+  if (isDemoExpired.value) {
+    const toast = useToast();
+    toast.add({ title: 'Your demo has expired. Please subscribe to continue.', color: 'red' });
+    return navigateTo('/subscription');
+  }
+
+  if (isSubscriptionExpired.value) {
+    const toast = useToast();
+    toast.add({ title: 'Your subscription has expired. Please renew to continue.', color: 'red' });
+    return navigateTo('/subscription');
+  }
+
+  if (tier.value === 'demo') return;
+
   const requirement = ROUTE_TIERS.find((r) => to.path.startsWith(r.prefix));
   if (!requirement) return;
 
   const { settings } = useSettings();
-  const currentTier = settings.value?.subscriptionTier || 'free';
+  const currentTier = settings.value?.subscriptionTier || 'demo';
   const currentLevel = TIER_LEVELS[currentTier] ?? 0;
   const requiredLevel = TIER_LEVELS[requirement.minTier] ?? 0;
 
   if (currentLevel < requiredLevel) {
     const toast = useToast();
-    toast.warning(
-      `This feature requires a ${requirement.minTier === 'pro' ? 'Pro' : 'Business'} subscription`,
-      'Upgrade your plan to access this feature'
-    );
+    toast.add({
+      title: `This feature requires a ${requirement.minTier === 'pro' ? 'Pro' : 'Business'} subscription`,
+      color: 'amber',
+    });
     return navigateTo('/subscription');
   }
 });

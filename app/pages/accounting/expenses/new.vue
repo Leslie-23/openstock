@@ -68,8 +68,8 @@ async function submit() {
 
 const paymentMethods = [
   { value: 'cash', label: 'Cash' },
-  { value: 'bank_transfer', label: 'Bank Transfer' },
-  { value: 'mobile_money', label: 'Mobile Money' },
+  { value: 'bankTransfer', label: 'Bank Transfer' },
+  { value: 'mobileMoney', label: 'Mobile Money' },
   { value: 'check', label: 'Cheque' },
   { value: 'other', label: 'Other' },
 ];

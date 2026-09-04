@@ -8,7 +8,7 @@ export default defineEventHandler(async () => {
 
   const summary = {
     appliance: { totalIn: 0, totalOut: 0, net: 0 },
-    cross_border: { totalIn: 0, totalOut: 0, net: 0 },
+    crossBorder: { totalIn: 0, totalOut: 0, net: 0 },
     forex: { totalIn: 0, totalOut: 0, net: 0 },
     crypto: { totalIn: 0, totalOut: 0, net: 0 },
     overall: { totalIn: 0, totalOut: 0, net: 0 },

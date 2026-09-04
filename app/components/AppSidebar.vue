@@ -2,7 +2,7 @@
 const route = useRoute();
 const router = useRouter();
 const { user, isAdmin, logout } = useAuth();
-const { canAccess, isFreeTier } = useSubscription();
+const { canAccess } = useSubscription();
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: "lucide:layout-dashboard" },
@@ -39,7 +39,7 @@ const accountingNavigation = computed(() => {
       { name: "Customers", href: "/accounting/customers", icon: "lucide:users" },
     );
   }
-  if (canAccess('accounting_full')) {
+  if (canAccess('accountingFull')) {
     items.unshift(
       { name: "Accounting", href: "/accounting", icon: "lucide:calculator" },
     );
@@ -48,7 +48,7 @@ const accountingNavigation = computed(() => {
       { name: "Journal", href: "/accounting/journal", icon: "lucide:book-open" },
     );
   }
-  if (canAccess('ar_ap')) {
+  if (canAccess('arAp')) {
     items.push(
       { name: "Receivables", href: "/accounting/receivables", icon: "lucide:arrow-down-left" },
       { name: "Payables", href: "/accounting/payables", icon: "lucide:arrow-up-right" },
@@ -160,7 +160,7 @@ async function handleLogout() {
       </div>
 
       <!-- Finance Separator -->
-      <template v-if="!isFreeTier">
+      <template v-if="canAccess('finance')">
         <div class="my-4 h-px bg-gray-100" />
 
         <!-- Finance navigation -->
@@ -218,7 +218,7 @@ async function handleLogout() {
       </template>
 
       <!-- HR Separator -->
-      <template v-if="!isFreeTier">
+      <template v-if="canAccess('hr')">
         <div class="my-4 h-px bg-gray-100" />
 
         <!-- HR & Payroll navigation -->

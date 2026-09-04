@@ -22,7 +22,7 @@ const isPaymentModalOpen = ref(false);
 const paymentForm = reactive({
   amount: 0,
   date: new Date().toISOString().split('T')[0],
-  method: 'bank_transfer',
+  method: 'bankTransfer',
   reference: '',
 });
 
@@ -65,7 +65,7 @@ async function sendInvoice() {
 function openPaymentModal() {
   paymentForm.amount = balanceDue.value;
   paymentForm.date = new Date().toISOString().split('T')[0];
-  paymentForm.method = 'bank_transfer';
+  paymentForm.method = 'bankTransfer';
   paymentForm.reference = '';
   isPaymentModalOpen.value = true;
 }
@@ -264,8 +264,8 @@ async function voidInvoice() {
           <label class="block text-xs font-medium text-gray-500 mb-1">Payment Method</label>
           <select v-model="paymentForm.method" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
             <option value="cash">Cash</option>
-            <option value="bank_transfer">Bank Transfer</option>
-            <option value="mobile_money">Mobile Money</option>
+            <option value="bankTransfer">Bank Transfer</option>
+            <option value="mobileMoney">Mobile Money</option>
             <option value="check">Check</option>
             <option value="other">Other</option>
           </select>
