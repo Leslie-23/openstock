@@ -232,7 +232,7 @@ onMounted(async () => {
     </div>
 
     <!-- Tier Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-3 gap-2 sm:gap-6">
       <div
         v-for="t in tiers"
         :key="t.id"
@@ -243,28 +243,29 @@ onMounted(async () => {
         ]"
       >
         <!-- Popular badge -->
-        <div v-if="t.popular" class="bg-primary-600 px-4 py-1.5 text-center text-xs font-semibold text-white uppercase tracking-wider">
-          Most Popular
+        <div v-if="t.popular" class="bg-primary-600 px-1 py-1 text-center text-[8px] sm:px-4 sm:py-1.5 sm:text-xs font-semibold text-white uppercase tracking-wider">
+          <span class="sm:hidden">Popular</span>
+          <span class="hidden sm:inline">Most Popular</span>
         </div>
 
-        <div class="p-6 flex-1 flex flex-col">
+        <div class="p-2 sm:p-6 flex-1 flex flex-col">
           <!-- Header -->
-          <div class="mb-6">
-            <h3 class="text-lg font-bold text-gray-900">{{ t.name }}</h3>
-            <p class="mt-1 text-sm text-gray-500">{{ t.description }}</p>
-            <div class="mt-4">
-              <span class="text-3xl font-bold text-gray-900">{{ t.price }}</span>
-              <span class="text-sm text-gray-500 ml-1">{{ t.period }}</span>
+          <div class="mb-2 sm:mb-6">
+            <h3 class="text-xs sm:text-lg font-bold text-gray-900">{{ t.name }}</h3>
+            <p class="mt-1 hidden text-sm text-gray-500 sm:block">{{ t.description }}</p>
+            <div class="mt-1 sm:mt-4">
+              <span class="text-sm sm:text-3xl font-bold text-gray-900">{{ t.price }}</span>
+              <span class="block text-[9px] text-gray-500 sm:ml-1 sm:inline sm:text-sm">{{ t.period }}</span>
             </div>
           </div>
 
           <!-- Features -->
-          <div class="flex-1 space-y-3 mb-6">
-            <div v-for="feature in t.features" :key="feature" class="flex items-start gap-2">
-              <Icon name="lucide:check" class="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-              <span class="text-sm text-gray-700">{{ feature }}</span>
+          <div class="flex-1 space-y-1 sm:space-y-3 mb-2 sm:mb-6">
+            <div v-for="feature in t.features" :key="feature" class="flex items-start gap-1 sm:gap-2">
+              <Icon name="lucide:check" class="h-2.5 w-2.5 sm:h-4 sm:w-4 text-green-500 mt-0.5 shrink-0" />
+              <span class="text-[9px] leading-tight sm:text-sm sm:leading-normal text-gray-700">{{ feature }}</span>
             </div>
-            <div v-for="feature in t.notIncluded" :key="feature" class="flex items-start gap-2">
+            <div v-for="feature in t.notIncluded" :key="feature" class="hidden items-start gap-2 sm:flex">
               <Icon name="lucide:x" class="h-4 w-4 text-gray-300 mt-0.5 shrink-0" />
               <span class="text-sm text-gray-400">{{ feature }}</span>
             </div>
@@ -276,50 +277,52 @@ onMounted(async () => {
             <button
               v-if="t.id === currentTier && !trialNotStarted && !isDemoExpired && !isSubscriptionExpired"
               disabled
-              class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-400 cursor-not-allowed"
+              class="w-full rounded-lg border border-gray-200 bg-gray-50 px-1 py-1.5 text-[9px] sm:px-4 sm:py-2.5 sm:text-sm font-medium text-gray-400 cursor-not-allowed"
             >
               Current Plan
             </button>
 
             <!-- Demo card: start the trial, or explain it's trial-only once a plan is active -->
             <template v-else-if="t.id === 'demo'">
-              <UiButton
+              <button
                 v-if="trialNotStarted && isAdmin"
-                variant="secondary"
-                block
-                :loading="isProcessing"
+                :disabled="isProcessing"
+                class="w-full rounded-lg bg-gray-100 px-1 py-1.5 text-[9px] leading-tight sm:px-4 sm:py-2.5 sm:text-sm font-medium text-gray-900 hover:bg-gray-200/80 disabled:opacity-50"
                 @click="startTrial"
               >
                 Start Free Trial
-              </UiButton>
-              <p v-else-if="trialNotStarted" class="text-center text-sm text-gray-400">
+              </button>
+              <p v-else-if="trialNotStarted" class="text-center text-[9px] leading-tight sm:text-sm text-gray-400">
                 Ask an admin to activate a plan
               </p>
-              <p v-else class="text-center text-xs text-gray-400">Trial period only</p>
+              <p v-else class="text-center text-[9px] sm:text-xs text-gray-400">Trial only</p>
             </template>
 
             <!-- Paystack checkout for pro/business -->
             <template v-else>
-              <UiButton
+              <button
                 v-if="isAdmin"
-                :variant="t.popular ? 'primary' : 'secondary'"
-                block
-                :loading="isProcessing"
+                :disabled="isProcessing"
+                class="w-full rounded-lg px-1 py-1.5 text-[9px] leading-tight sm:px-4 sm:py-2.5 sm:text-sm font-medium disabled:opacity-50"
+                :class="t.popular ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-sm' : 'bg-gray-100 text-gray-900 hover:bg-gray-200/80'"
                 @click="handlePaystackCheckout(t.id as 'pro' | 'business')"
               >
                 <template v-if="t.id === currentTier && isSubscriptionExpired">
-                  Renew {{ t.name }}
+                  <span class="sm:hidden">Renew</span>
+                  <span class="hidden sm:inline">Renew {{ t.name }}</span>
                 </template>
                 <template v-else-if="currentTier === 'demo' || isDemoExpired || isSubscriptionExpired">
-                  Subscribe to {{ t.name }}
+                  <span class="sm:hidden">Subscribe</span>
+                  <span class="hidden sm:inline">Subscribe to {{ t.name }}</span>
                 </template>
                 <template v-else>
-                  {{ tiers.findIndex(x => x.id === t.id) > tiers.findIndex(x => x.id === currentTier) ? 'Upgrade' : 'Switch' }}
-                  to {{ t.name }}
+                  <span class="sm:hidden">{{ tiers.findIndex(x => x.id === t.id) > tiers.findIndex(x => x.id === currentTier) ? 'Upgrade' : 'Switch' }}</span>
+                  <span class="hidden sm:inline">{{ tiers.findIndex(x => x.id === t.id) > tiers.findIndex(x => x.id === currentTier) ? 'Upgrade' : 'Switch' }} to {{ t.name }}</span>
                 </template>
-              </UiButton>
-              <p v-else class="text-center text-sm text-gray-400">
-                Contact an admin to change plans
+              </button>
+              <p v-else class="text-center text-[9px] leading-tight sm:text-sm text-gray-400">
+                <span class="sm:hidden">Contact admin</span>
+                <span class="hidden sm:inline">Contact an admin to change plans</span>
               </p>
             </template>
           </div>
