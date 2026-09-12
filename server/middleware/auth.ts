@@ -85,7 +85,7 @@ export default defineEventHandler(async (event) => {
   // ============================================================================
   // ADMIN-ONLY ROUTES
   // ============================================================================
-  const adminOnlyPaths = ['/api/users'];
+  const adminOnlyPaths = ['/api/users', '/api/admin'];
 
   const isAdminRoute = adminOnlyPaths.some((adminPath) =>
     path.startsWith(adminPath)

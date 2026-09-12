@@ -27,6 +27,13 @@ export default defineNuxtConfig({
   runtimeConfig: {
     adminSecretKey: '',
     paystackSecretKey: '',
+    // Customer-provisioning portal (server/api/admin/provision.post.ts) —
+    // triggers a GitHub Actions workflow that creates a fully isolated
+    // Cloudflare deployment for a new customer. Both must be set for the
+    // portal to work; it's a no-op (403) otherwise.
+    provisionSecretKey: '',
+    githubProvisionToken: '',
+    githubRepo: 'leslie-23/openstock',
     public: {
       paystackPublicKey: '',
       // Personal appliance/forex/crypto trading ledger — not part of the general SME

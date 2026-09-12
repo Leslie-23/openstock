@@ -1,5 +1,5 @@
 // Admin-only routes
-const ADMIN_ROUTES = ['/users'];
+const ADMIN_ROUTES = ['/users', '/admin'];
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // Skip middleware for auth pages

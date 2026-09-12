@@ -32,41 +32,25 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   }
 
-  // Fetch fresh, uncached — this gate must reflect the real subscription
-  // state on every navigation, not whatever useSettings()'s asyncData cache
-  // happens to be holding from an earlier point in the session. Use
-  // useRequestFetch() (not plain $fetch) so the incoming request's session
-  // cookie is forwarded during SSR — otherwise this call 401s server-side.
+  // Having no plan / an expired trial / an expired subscription is handled by
+  // <PlanRequiredOverlay/> in the layout — it blocks the whole app in place
+  // on every route, so there's nothing to redirect for here. This check only
+  // covers a route requiring a higher tier than an otherwise-active plan.
+  const requirement = ROUTE_TIERS.find((r) => to.path.startsWith(r.prefix));
+  if (!requirement) return;
+
+  // Fetch fresh, uncached — must reflect the real subscription state on
+  // every navigation. useRequestFetch() (not plain $fetch) forwards the
+  // incoming request's session cookie during SSR.
   const requestFetch = useRequestFetch();
-  let freshSettings: { subscriptionTier?: string; trialEndsAt?: string | null; subscriptionEndDate?: string | null } | null = null;
+  let freshSettings: { subscriptionTier?: string } | null = null;
   try {
     freshSettings = await requestFetch('/api/settings');
   } catch {
     return; // couldn't verify — don't block navigation on a network hiccup
   }
   const currentTier = freshSettings?.subscriptionTier || 'demo';
-  const today = new Date();
-
-  if (currentTier === 'demo' && !freshSettings?.trialEndsAt) {
-    return navigateTo('/subscription');
-  }
-
-  if (currentTier === 'demo' && freshSettings?.trialEndsAt && new Date(freshSettings.trialEndsAt) < today) {
-    const toast = useToast();
-    toast.error('Your demo has expired. Please subscribe to continue.');
-    return navigateTo('/subscription');
-  }
-
-  if (currentTier !== 'demo' && freshSettings?.subscriptionEndDate && new Date(freshSettings.subscriptionEndDate) < today) {
-    const toast = useToast();
-    toast.error('Your subscription has expired. Please renew to continue.');
-    return navigateTo('/subscription');
-  }
-
   if (currentTier === 'demo') return;
-
-  const requirement = ROUTE_TIERS.find((r) => to.path.startsWith(r.prefix));
-  if (!requirement) return;
 
   const currentLevel = TIER_LEVELS[currentTier] ?? 0;
   const requiredLevel = TIER_LEVELS[requirement.minTier] ?? 0;

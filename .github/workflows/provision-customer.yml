@@ -1,0 +1,42 @@
+name: Provision customer deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      customer_slug:
+        description: "URL-safe project name (e.g. acme) — becomes acme.pages.dev, acme-db, acme_kv"
+        required: true
+      business_name:
+        description: "Business name shown in the app"
+        required: true
+      currency:
+        description: "Currency code (EUR, USD, GBP, GHC)"
+        required: false
+        default: "GHC"
+      trial_days:
+        description: "Length of the free trial in days"
+        required: false
+        default: "14"
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Provision
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CUSTOMER_SLUG: ${{ inputs.customer_slug }}
+          BUSINESS_NAME: ${{ inputs.business_name }}
+          CURRENCY: ${{ inputs.currency }}
+          TRIAL_DAYS: ${{ inputs.trial_days }}
+          PRODUCTION_BRANCH: ${{ github.ref_name }}
+        run: node scripts/provision-customer.mjs

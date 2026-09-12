@@ -28,5 +28,8 @@ const { isOpen: isSidebarOpen, close: closeSidebar } = useSidebar();
         </div>
       </main>
     </div>
+
+    <!-- Blocking overlay: no active plan / trial / subscription -->
+    <PlanRequiredOverlay />
   </div>
 </template>
