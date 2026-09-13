@@ -39,6 +39,9 @@ export default defineNuxtConfig({
     // REST API (their own DB binding is unreachable from this deployment).
     cloudflareApiToken: '',
     cloudflareAccountId: '',
+    // Natural-language -> SQL in the admin console's per-customer query
+    // console (server/api/admin/customers/[slug]/nl-query.post.ts).
+    groqApiKey: '',
     public: {
       paystackPublicKey: '',
       // Personal appliance/forex/crypto trading ledger — not part of the general SME

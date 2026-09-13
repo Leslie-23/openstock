@@ -56,6 +56,10 @@ export default defineEventHandler(async (event) => {
         Accept: 'application/vnd.github+json',
         'Content-Type': 'application/json',
         'X-GitHub-Api-Version': '2022-11-28',
+        // GitHub's API rejects any request with no User-Agent (403 "Request
+        // forbidden by administrative rules") — the Cloudflare Workers
+        // runtime doesn't send a default one the way Node does.
+        'User-Agent': 'openstock-admin-console',
       },
       body: JSON.stringify({
         ref: 'main',

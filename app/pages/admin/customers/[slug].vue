@@ -18,6 +18,28 @@ const confirmDangerous = ref(false);
 
 const looksDangerous = computed(() => /\b(update|delete|drop|alter|insert)\b/i.test(sql.value));
 
+const nlPrompt = ref('');
+const isGenerating = ref(false);
+
+async function generateSql() {
+  if (!nlPrompt.value.trim()) return;
+  isGenerating.value = true;
+  try {
+    const res = await $fetch(`/api/admin/customers/${slug}/nl-query`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: { prompt: nlPrompt.value },
+    });
+    sql.value = res.sql;
+    confirmDangerous.value = false;
+    toast.success('SQL generated', 'Review it below, then click Run Query.');
+  } catch (e: any) {
+    toast.error('Could not generate SQL', e.data?.message || 'Please try again');
+  } finally {
+    isGenerating.value = false;
+  }
+}
+
 async function load() {
   if (!keyUnlocked.value) return;
   isLoading.value = true;
@@ -127,6 +149,25 @@ const resultColumns = computed(() => (resultRows.value.length ? Object.keys(resu
                 {{ t }}
               </button>
             </div>
+          </div>
+
+          <div class="flex gap-2">
+            <input
+              v-model="nlPrompt"
+              type="text"
+              placeholder="Describe what you want, e.g. show low stock products"
+              class="flex-1 rounded-md border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              @keyup.enter="generateSql"
+            />
+            <button
+              class="shrink-0 rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 disabled:opacity-50"
+              :disabled="isGenerating || !nlPrompt.trim()"
+              @click="generateSql"
+            >
+              <Icon v-if="isGenerating" name="lucide:loader-2" class="mr-1.5 inline h-3.5 w-3.5 animate-spin" />
+              <Icon v-else name="lucide:sparkles" class="mr-1.5 inline h-3.5 w-3.5" />
+              Generate SQL
+            </button>
           </div>
 
           <textarea
