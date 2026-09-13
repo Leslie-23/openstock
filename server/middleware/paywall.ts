@@ -29,6 +29,7 @@ export default defineEventHandler(async (event) => {
   if (path.startsWith('/api/auth/')) return;
   if (path.startsWith('/api/_auth/')) return;
   if (path.startsWith('/api/subscription')) return;
+  if (path.startsWith('/api/admin')) return;
   if (path.startsWith('/api/__')) return;
   if (path === '/api/settings' && event.method === 'GET') return;
   if (path === '/api/accounting/seed-accounts') return;

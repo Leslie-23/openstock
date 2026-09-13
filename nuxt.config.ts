@@ -34,6 +34,11 @@ export default defineNuxtConfig({
     provisionSecretKey: '',
     githubProvisionToken: '',
     githubRepo: 'leslie-23/openstock',
+    // Admin console (server/api/admin/customers/*) — reads/writes a
+    // provisioned customer's isolated D1 database directly via Cloudflare's
+    // REST API (their own DB binding is unreachable from this deployment).
+    cloudflareApiToken: '',
+    cloudflareAccountId: '',
     public: {
       paystackPublicKey: '',
       // Personal appliance/forex/crypto trading ledger — not part of the general SME

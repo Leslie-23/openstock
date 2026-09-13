@@ -749,3 +749,29 @@ export const settings = sqliteTable('settings', {
 
 export type Settings = typeof settings.$inferSelect;
 export type NewSettings = typeof settings.$inferInsert;
+
+// ============================================================================
+// PROVISIONED CUSTOMERS (admin console registry)
+// ============================================================================
+// Tracks every isolated customer deployment created via /admin/provision.
+// Lives only on the deployment where the admin console is unlocked — a
+// customer's own isolated deployment has no meaningful use for this table.
+export const provisionedCustomers = sqliteTable('provisioned_customers', {
+  id: text('id').primaryKey(),
+  slug: text('slug').notNull(),
+  businessName: text('business_name').notNull(),
+  currency: text('currency').notNull(),
+  trialDays: integer('trial_days').notNull(),
+  databaseId: text('database_id'),
+  kvId: text('kv_id'),
+  url: text('url'),
+  status: text('status', {
+    enum: ['provisioning', 'live', 'failed'],
+  }).default('provisioning'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(
+    () => new Date()
+  ),
+});
+
+export type ProvisionedCustomer = typeof provisionedCustomers.$inferSelect;
+export type NewProvisionedCustomer = typeof provisionedCustomers.$inferInsert;

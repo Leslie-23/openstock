@@ -1,3 +1,5 @@
+import { eq } from 'drizzle-orm';
+
 const SLUG_RE = /^[a-z0-9]([a-z0-9-]{1,48}[a-z0-9])?$/;
 
 export default defineEventHandler(async (event) => {
@@ -34,6 +36,16 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Trial days must be between 1 and 365.' });
   }
 
+  const db = useDB();
+  const existing = await db
+    .select({ id: tables.provisionedCustomers.id })
+    .from(tables.provisionedCustomers)
+    .where(eq(tables.provisionedCustomers.slug, slug))
+    .get();
+  if (existing) {
+    throw createError({ statusCode: 409, message: `"${slug}" has already been provisioned.` });
+  }
+
   const [owner, repo] = config.githubRepo.split('/');
   const response = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/actions/workflows/provision-customer.yml/dispatches`,
@@ -64,6 +76,16 @@ export default defineEventHandler(async (event) => {
       message: `Failed to trigger provisioning workflow (GitHub responded ${response.status}). ${detail}`.trim(),
     });
   }
+
+  await db.insert(tables.provisionedCustomers).values({
+    id: generateId('cust'),
+    slug,
+    businessName,
+    currency,
+    trialDays,
+    url: `https://${slug}.pages.dev`,
+    status: 'provisioning',
+  });
 
   return {
     success: true,

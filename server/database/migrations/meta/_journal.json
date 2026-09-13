@@ -22,6 +22,13 @@
       "when": 1788538755030,
       "tag": "0003_accounting_finance_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1789321413427,
+      "tag": "0004_provisioned_customers",
+      "breakpoints": true
     }
   ]
 }
